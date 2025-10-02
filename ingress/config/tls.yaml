@@ -1,0 +1,19 @@
+entryPoints:
+  web:
+    address: ":80"
+
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolcer: le
+
+certificatesResolvers:
+  le:
+    acme:
+      email: varma01@mail.com
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        entryPoint: web
+  ts:
+    tailscale: {}
