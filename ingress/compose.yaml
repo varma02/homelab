@@ -65,8 +65,7 @@ services:
       # docker socket access
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # traefik data stores
-      - ./data/traefik/certs:/certs:ro
-      - ./config/tls.yaml:/dynamic/tls.yaml:ro
+      # - ./data/traefik/certs:/certs:ro
       - ./data/traefik/letsencrypt:/letsencrypt:rw
       # traefik logs
       - ./logs/traefik:/logs:rw
