@@ -1,6 +1,4 @@
 providers:
-  file:
-    filename: /dynamic/tls.yaml
   docker:
     exposedByDefault: false
     watch: true
