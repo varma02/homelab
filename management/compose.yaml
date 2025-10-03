@@ -20,5 +20,14 @@ services:
       # Stacks location
       - ../:/app/mystacks:ro
 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dockge.rule=Host(`dockage.nas1.royal-ph.ts.net`)"
+      - "traefik.http.services.dockge.loadbalancer.server.port=18001"
+      - "traefik.http.routers.dockge.entrypoints=websecure"
+      # Enable TLS with Tailscale
+      - "traefik.http.routers.dockage.tls=true"
+      - "traefik.http.routers.dockge.tls.certresolver=ts"
+
     environment:
       - DOCKGE_STACKS_DIR=/app/mystacks
