@@ -34,3 +34,10 @@ certificatesResolvers:
         entryPoint: web
   ts:
     tailscale: {}
+
+ping: {}
+
+logs:
+  level: INFO
+  filePath: /logs/traefik.log
+  format: common
