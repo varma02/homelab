@@ -52,7 +52,7 @@ services:
 
     networks:
       - traefik
-      - ingress_external
+      - internet
 
     ports:
       - "80:80"
@@ -88,5 +88,5 @@ services:
 networks:
   traefik:
     external: true
-  ingress_external:
+  internet:
     driver: bridge

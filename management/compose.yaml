@@ -25,7 +25,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dockge.rule=Host(`nas1.royal-ph.ts.net`) && PathPrefix(`/dockage`)"
-      - "traefik.http.services.dockge.loadbalancer.server.port=18001"
+      - "traefik.http.services.dockge.loadbalancer.server.port=5001"
       - "traefik.http.routers.dockge.entrypoints=websecure"
       # Enable TLS with Tailscale
       - "traefik.http.routers.dockage.tls=true"
