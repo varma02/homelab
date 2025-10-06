@@ -11,6 +11,8 @@ services:
       test: "curl --fail http://localhost:5001 || exit 1"
       timeout: 5s
 
+    networks:
+      - traefik
     ports:
       - 18001:5001
 
