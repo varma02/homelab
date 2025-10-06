@@ -87,7 +87,6 @@ services:
 
 networks:
   traefik:
-    driver: bridge
-    internal: true
+    external: true
   ingress_external:
     driver: bridge

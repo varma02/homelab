@@ -33,3 +33,7 @@ services:
 
     environment:
       - DOCKGE_STACKS_DIR=/app/mystacks
+
+networks:
+  traefik:
+    external: true
