@@ -22,8 +22,7 @@ services:
       - TS_EXTRA_ARGS=--advertise-exit-node
       - TS_SOCKET=/var/run/tailscale/tailscaled.sock
 
-    networks:
-      - ingress_external
+    network_mode: host
 
     volumes:
       - ./data/tailscale/data:/var/lib/tailscale
