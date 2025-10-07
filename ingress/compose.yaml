@@ -79,6 +79,9 @@ services:
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls=true"
+      #### Prefix stripper
+      - "traefik.http.middlewares.strip-traefik.stripprefix.prefixes=/traefik"
+      - "traefik.http.routers.dashboard.middlewares=strip-traefik@docker"
       # Use Tailscale provider
       - "traefik.http.routers.dashboard.tls.certresolver=ts"
       # Basic‑auth middleware
