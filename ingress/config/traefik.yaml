@@ -29,11 +29,16 @@ certificatesResolvers:
   le:
     acme:
       email: someone@example.com
-      storage: /letsencrypt/acme.json
+      storage: /acme/le.json
       httpChallenge:
         entryPoint: web
-  ts:
-    tailscale: {}
+  cf:
+    acme:
+      email: someone@example.com
+      storage: /acme/cf.json
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 10
 
 ping: {}
 
