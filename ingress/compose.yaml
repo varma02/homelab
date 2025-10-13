@@ -19,14 +19,12 @@ services:
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
       - TS_AUTH_ONCE=true
-      - TS_EXTRA_ARGS=--advertise-exit-node
-      - TS_SOCKET=/var/run/tailscale/tailscaled.sock
+      - TS_EXTRA_ARGS="--advertise-exit-node --exit-node-allow-lan-access"
 
     network_mode: host
 
     volumes:
       - ./data/tailscale/data:/var/lib/tailscale
-      - ./data/tailscale/socket:/var/run/tailscale
       - /dev/net/tun:/dev/net/tun
 
     devices:
@@ -65,25 +63,21 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # traefik data stores
       # - ./data/traefik/certs:/certs:ro
-      - ./data/traefik/letsencrypt:/letsencrypt:rw
+      - ./data/traefik/acme:/acme:rw
       # traefik logs
       - ./logs/traefik:/logs:rw
-      # tailscale socket access
-      - ./data/tailscale/data:/var/lib/tailscale:rw
-      - ./data/tailscale/socket:/var/run/tailscale:ro
+
+    env_file: ./.env
 
     labels:
       - "traefik.enable=true"
       # Dashboard router
-      - "traefik.http.routers.dashboard.rule=Host(`nas1.royal-ph.ts.net`) && PathPrefix(`/traefik`)"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.nas1.ts.varma01.dev`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls=true"
-      #### Prefix stripper
-      - "traefik.http.middlewares.strip-traefik.stripprefix.prefixes=/traefik"
-      - "traefik.http.routers.dashboard.middlewares=strip-traefik@docker"
       # Use Tailscale provider
-      - "traefik.http.routers.dashboard.tls.certresolver=ts"
+      - "traefik.http.routers.dashboard.tls.certresolver=cf"
       # Basic‑auth middleware
       # - "traefik.http.middlewares.dashboard-auth.basicauth.users=<PASTE_HASH_HERE>"
       # - "traefik.http.routers.dashboard.middlewares=dashboard-auth@docker"
