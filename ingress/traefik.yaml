@@ -28,14 +28,14 @@ entryPoints:
 certificatesResolvers:
   le:
     acme:
-      email: someone@example.com
-      storage: /acme/le.json
+      email: "someone@example.com"
+      storage: "/acme/le.json"
       httpChallenge:
         entryPoint: web
   cf:
     acme:
-      email: someone@example.com
-      storage: /acme/cf.json
+      email: "someone@example.com"
+      storage: "/acme/cf.json"
       dnsChallenge:
         provider: cloudflare
         delayBeforeCheck: 10
@@ -44,5 +44,5 @@ ping: {}
 
 logs:
   level: INFO
-  filePath: /logs/traefik.log
   format: common
+  filePath: "/var/log/traefik.log"

@@ -1,39 +1,4 @@
 services:
-  tailscale:
-    image: tailscale/tailscale:latest
-    restart: unless-stopped
-    healthcheck:
-      interval: 1m
-      retries: 5
-      start_interval: 5s
-      start_period: 15s
-      test: "tailscale status"
-      timeout: 5s
-
-    security_opt:
-      - no-new-privileges:true
-
-    # load auth key from .env
-    env_file: ./.env
-    environment:
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_USERSPACE=false
-      - TS_AUTH_ONCE=true
-      - TS_EXTRA_ARGS="--advertise-exit-node --exit-node-allow-lan-access"
-
-    network_mode: host
-
-    volumes:
-      - ./data/tailscale/data:/var/lib/tailscale
-      - /dev/net/tun:/dev/net/tun
-
-    devices:
-      - /dev/net/tun:/dev/net/tun
-
-    cap_add:
-      - net_admin
-      - sys_module
-
   traefik:
     image: traefik:v3.4
     restart: unless-stopped
@@ -58,29 +23,24 @@ services:
 
     volumes:
       # traefik configuration
-      - ./config/traefik.yaml:/etc/traefik/traefik.yaml:ro
+      - ./traefik.yaml:/etc/traefik/traefik.yaml:ro
       # docker socket access
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # traefik data stores
-      # - ./data/traefik/certs:/certs:ro
-      - ./data/traefik/acme:/acme:rw
+      - ../data/traefik/acme:/acme:rw
       # traefik logs
-      - ./logs/traefik:/logs:rw
+      - ../logs/traefik:/var/log/traefik.log:rw
 
     env_file: ./.env
 
     labels:
       - "traefik.enable=true"
-      # Dashboard router
+      # Dashboard access on tailnet
       - "traefik.http.routers.dashboard.rule=Host(`traefik.nas1.ts.varma01.dev`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls=true"
-      # Use Tailscale provider
       - "traefik.http.routers.dashboard.tls.certresolver=cf"
-      # Basic‑auth middleware
-      # - "traefik.http.middlewares.dashboard-auth.basicauth.users=<PASTE_HASH_HERE>"
-      # - "traefik.http.routers.dashboard.middlewares=dashboard-auth@docker"
 
 networks:
   traefik:
