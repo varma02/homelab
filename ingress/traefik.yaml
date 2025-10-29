@@ -3,6 +3,8 @@ providers:
     exposedByDefault: false
     watch: true
     network: traefik
+  file:
+    directory: /etc/traefik/dynamic.yaml
 
 api:
   dashboard: true
