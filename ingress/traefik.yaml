@@ -28,13 +28,13 @@ entryPoints:
 certificatesResolvers:
   le:
     acme:
-      email: "someone@example.com"
+      email: "contact+letsencrypt@varma01.dev"
       storage: "/acme/le.json"
       httpChallenge:
         entryPoint: web
   cf:
     acme:
-      email: "someone@example.com"
+      email: "contact+letsencrypt@varma01.dev"
       storage: "/acme/cf.json"
       dnsChallenge:
         provider: cloudflare
