@@ -4,7 +4,7 @@ providers:
     watch: true
     network: traefik
   file:
-    directory: /etc/traefik/dynamic.yaml
+    directory: /etc/traefik/dynamic
 
 api:
   dashboard: true
