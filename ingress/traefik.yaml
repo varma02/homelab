@@ -42,6 +42,13 @@ certificatesResolvers:
         provider: cloudflare
         delayBeforeCheck: 10
 
+http:
+  middlewares:
+    tailnet-restricted:
+      ipAllowList:
+        sourceRange:
+          - "100.64.0.0/10"
+
 ping: {}
 
 logs:

@@ -1,15 +1,39 @@
 http:
   routers:
-    truenas:
+    nas1:
       rule: Host(`nas1.ts.varma01.dev`)
       entryPoints:
         - websecure
-      service: truenas
+      service: nas1
+      middlewares:
+        - tailnet-restricted
+      tls:
+        certResolver: cf
+    
+    nas1Router:
+      rule: Host(`router.nas1.ts.varma01.dev`)
+      entryPoints:
+        - websecure
+      service: nas1Router
+      middlewares:
+        - tailnet-restricted
       tls:
         certResolver: cf
   
+
   services:
-    truenas:
+    nas1:
       loadBalancer:
         servers:
           - url: http://10.12.1.5:18080/
+
+    nas1Router:
+      loadBalancer:
+        servers:
+          - url: https://10.12.1.1/
+        serversTransport: allowInsecure
+  
+
+  serversTransports:
+    allowInsecure:
+      insecureSkipVerify: true
