@@ -6,7 +6,7 @@ http:
         - websecure
       service: nas1
       middlewares:
-        - tailnet-restricted
+        - tailnet-restricted@file
       tls:
         certResolver: cf
     
@@ -16,7 +16,7 @@ http:
         - websecure
       service: nas1Router
       middlewares:
-        - tailnet-restricted
+        - tailnet-restricted@file
       tls:
         certResolver: cf
   
