@@ -7,9 +7,9 @@ http:
       service: truenas
       tls:
         certResolver: cf
-
-services:
-  truenas:
-    loadBalancer:
-      servers:
-        - url: https://10.12.1.5:18443/
+  
+  services:
+    truenas:
+      loadBalancer:
+        servers:
+          - url: https://10.12.1.5:18443/
