@@ -1,21 +1,10 @@
 http:
-  middlewares:
-    tailnet-restricted:
-      ipAllowList:
-        sourceRange:
-          - "100.64.0.0/10"
-          - "127.0.0.1/32"
-          - "10.12.1.5"
-
-
   routers:
     nas1:
       rule: Host(`nas1.ts.varma01.dev`)
       entryPoints:
         - websecure
       service: nas1
-      middlewares:
-        - tailnet-restricted@file
       tls:
         certResolver: cf
     
@@ -24,8 +13,6 @@ http:
       entryPoints:
         - websecure
       service: nas1Router
-      middlewares:
-        - tailnet-restricted@file
       tls:
         certResolver: cf
   
