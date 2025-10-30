@@ -26,11 +26,6 @@ entryPoints:
       tls:
         options: default
         certResolver: le
-      middlewares:
-        tailnet-restricted:
-          ipAllowList:
-            sourceRange:
-              - "100.64.0.0/10"
 
 certificatesResolvers:
   le:
