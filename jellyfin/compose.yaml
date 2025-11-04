@@ -1,0 +1,40 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    security_opt:
+      - no-new-privileges:true
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Budapest
+      - JELLYFIN_PublishedServerUrl=https://jelly.varma01.dev
+
+    volumes:
+      - /mnt/SigmaPool/jellyfin/config:/config
+      - /mnt/SigmaPool/jellyfin/cache:/cache
+      - /mnt/SigmaPool/jellyfin/media:/media:ro
+      - /mnt/SigmaPool/torrent/downloads:/downloads/completed:ro
+
+    restart: "unless-stopped"
+    healthcheck:
+      interval: 1m
+      retries: 5
+      start_interval: 5s
+      start_period: 15s
+      timeout: 5s
+      test: "curl --fail http://myserver:8096/health || exit 1"
+
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jelly.varma01.dev`)"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.tls=true"
+      - "traefik.http.routers.jellyfin.tls.certresolver=le"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+
+networks:
+  traefik:
+    external: true
