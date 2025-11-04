@@ -7,9 +7,9 @@ services:
       - "53:53/tcp" #DNS
       - "53:53/udp" #DNS
     environment:
-      - TZ: "Europe/Budapest"
-      - FTLCONF_webserver_api_password: "correct horse battery staple"
-      - FTLCONF_dns_listeningMode: "all"
+      - TZ=Europe/Budapest
+      # - FTLCONF_webserver_api_password=changeme
+      - FTLCONF_dns_listeningMode=all
     volumes:
       - "/mnt/SigmaPool/pihole/config:/etc/pihole"
 
