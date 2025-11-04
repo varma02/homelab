@@ -27,6 +27,7 @@ services:
 
     networks:
       - traefik
+      - internet
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.rule=Host(`jelly.varma01.dev`)"
@@ -36,5 +37,7 @@ services:
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
 
 networks:
+  internet:
+    driver: bridge
   traefik:
     external: true
