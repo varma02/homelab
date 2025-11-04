@@ -1,0 +1,42 @@
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+
+    ports:
+      - "53:53/tcp" #DNS
+      - "53:53/udp" #DNS
+    environment:
+      - TZ: "Europe/Budapest"
+      - FTLCONF_webserver_api_password: "correct horse battery staple"
+      - FTLCONF_dns_listeningMode: "all"
+    volumes:
+      - "/mnt/SigmaPool/pihole/config:/etc/pihole"
+
+    security_opt:
+      - no-new-privileges:true
+    cap_add:
+      - SYS_NICE
+
+    restart: unless-stopped
+    healthcheck:
+      interval: 1m
+      retries: 5
+      start_interval: 5s
+      start_period: 15s
+      timeout: 5s
+      test: "pihole status"
+
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.nas1.ts.varma01.dev`)"
+      - "traefik.http.routers.pihole.entrypoints=websecure"
+      - "traefik.http.routers.pihole.tls=true"
+      - "traefik.http.routers.pihole.tls.certresolver=cf"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+
+networks:
+  traefik:
+    external: true
