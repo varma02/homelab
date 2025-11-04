@@ -6,12 +6,13 @@ services:
     ports:
       - "53:53/tcp" #DNS
       - "53:53/udp" #DNS
+    env_file: ./.env
     environment:
       - TZ=Europe/Budapest
       # - FTLCONF_webserver_api_password=changeme
       - FTLCONF_dns_listeningMode=all
     volumes:
-      - "/mnt/SigmaPool/pihole/config:/etc/pihole"
+      - ${PIHOLE_CONFIG_VOLUME}:/etc/pihole
 
     security_opt:
       - no-new-privileges:true
@@ -32,7 +33,7 @@ services:
       - internet
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pihole.rule=Host(`pihole.nas1.ts.varma01.dev`)"
+      - "traefik.http.routers.pihole.rule=Host(`${PIHOLE_WEB_HOST}`)"
       - "traefik.http.routers.pihole.entrypoints=websecure"
       - "traefik.http.routers.pihole.tls=true"
       - "traefik.http.routers.pihole.tls.certresolver=cf"

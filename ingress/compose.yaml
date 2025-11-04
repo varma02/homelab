@@ -37,7 +37,7 @@ services:
     labels:
       - "traefik.enable=true"
       # Dashboard access on tailnet
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.nas1.ts.varma01.dev`)"
+      - "traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_DASHBOARD_HOST}`)"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls=true"
