@@ -66,7 +66,14 @@ def main() -> None:
     movie_folders = [p for p in work_dir.iterdir() if p.is_dir()]
     print("OK")
     print("Scanning downloads folder...", end=" ")
-    downloads_media = [p for p in downloads_dir.rglob('*') if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS and 'sample' not in p.name.lower()]
+    downloads_media = [
+        p for p in downloads_dir.rglob('*') \
+        if p.is_file() and \
+        p.suffix.lower() in VIDEO_EXTENSIONS and \
+        'sample' not in p.stem.lower() and \
+        'sample' not in p.parent.stem.lower() and \
+        'season' not in p.parent.stem.lower()
+    ]
     print("OK")
 
     print(f"Found {len(movie_folders)} movie folders.")
