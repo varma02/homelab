@@ -72,8 +72,8 @@ def main() -> None:
         p for p in downloads_dir.rglob('*') \
         if p.is_file() and \
         p.suffix.lower() in VIDEO_EXTENSIONS and \
-        not re.match(SERIES_FILTER, p.stem.lower() +"/"+ p.parent.stem.lower()) and \
-        not re.match(SAMPLE_FILTER, p.stem.lower() +"/"+ p.parent.stem.lower())
+        not re.seatch(SERIES_FILTER, p.stem.lower() +"/"+ p.parent.stem.lower()) and \
+        not re.seatch(SAMPLE_FILTER, p.stem.lower() +"/"+ p.parent.stem.lower())
     ]
     print("OK")
 
