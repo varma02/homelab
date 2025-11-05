@@ -16,7 +16,7 @@ def media_search(query: str, downloads_media: list[Path]) -> list[tuple[float, P
     movie_title = extract_title(query)
     matches = []
     for media in downloads_media:
-        media_title = extract_title(media.stem)
+        media_title = extract_title(media.parent)
         score = difflib.SequenceMatcher(None, movie_title, media_title).ratio()
         matches.append((score, media))
     matches.sort(key=lambda x: x[0], reverse=True)
@@ -93,6 +93,7 @@ def main() -> None:
                         query = input("Enter a search query for the media file: ").strip()
                         matches = media_search(query, downloads_media)
                         list_matches(matches)
+            print()
 
 
 if __name__ == "__main__":
