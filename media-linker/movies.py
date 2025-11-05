@@ -1,21 +1,23 @@
 import argparse
 from pathlib import Path
 import difflib
+import re
 
 VIDEO_EXTENSIONS = {'.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m4v'}
+TITLE_FILTER = r'([\ \_\-\(\)\[\]\.\/]|(1080p|720p|480p|1440p|UHD)|(bluray|webrip|webdl|hdtv)|(x264|x265|av1|h264|h265))+'
+SERIES_FILTER = r's\d{2}|series|season|\d{2}x\d{2}'
+SAMPLE_FILTER = r'sample'
 
 def extract_title(name: str) -> str:
     name = name.strip().lower()
-    name = name.replace(' ', '.').replace('_', '.').replace('-', '.')
-    name = name.replace('(', '').replace(')', '')
-    name = name.replace('[', '').replace(']', '')
+    name = re.sub(TITLE_FILTER, '', name)
     return name
 
 def media_search(query: str, downloads_media: list[Path]) -> list[tuple[float, Path]]:
     movie_title = extract_title(query)
     matches = []
     for media in downloads_media:
-        media_title = extract_title(media.parent.stem + '/' + media.stem)
+        media_title = extract_title(media.parent.stem + media.stem)
         score = difflib.SequenceMatcher(None, movie_title, media_title).ratio()
         matches.append((score, media))
     matches.sort(key=lambda x: x[0], reverse=True)
@@ -70,9 +72,8 @@ def main() -> None:
         p for p in downloads_dir.rglob('*') \
         if p.is_file() and \
         p.suffix.lower() in VIDEO_EXTENSIONS and \
-        'sample' not in p.stem.lower() and \
-        'sample' not in p.parent.stem.lower() and \
-        'season' not in p.parent.stem.lower()
+        not re.match(SERIES_FILTER, p.stem.lower() +"/"+ p.parent.stem.lower()) and \
+        not re.match(SAMPLE_FILTER, p.stem.lower() +"/"+ p.parent.stem.lower())
     ]
     print("OK")
 
