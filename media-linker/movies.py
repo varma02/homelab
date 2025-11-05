@@ -5,7 +5,7 @@ import re
 
 VIDEO_EXTENSIONS = {'.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m4v'}
 TITLE_FILTER = r'([\ \_\-\(\)\[\]\.\/]|(1080p|720p|480p|1440p|UHD)|(bluray|webrip|webdl|hdtv)|(x264|x265|av1|h264|h265))+'
-SERIES_FILTER = r's\d{2}|series|season|\d{2}x\d{2}|s\d{1,2}e\d{1,2}|s\d{1,2}.{1,3}\d{1,2}'
+SERIES_FILTER = r's\d{2}|series|season|specials|\d{2}x\d{2}|s\d{1,2}e\d{1,2}|s\d{1,2}.{1,3}\d{1,2}'
 SAMPLE_FILTER = r'sample'
 
 def extract_title(name: str) -> str:
@@ -17,9 +17,9 @@ def media_search(query: str, downloads_media: list[Path]) -> list[tuple[float, P
     movie_title = extract_title(query)
     matches = []
     for media in downloads_media:
-        media_title = extract_title(media.parent.stem + media.stem)
-        score = difflib.SequenceMatcher(None, movie_title, media_title).ratio()
-        matches.append((score, media))
+        media_score = difflib.SequenceMatcher(None, movie_title, extract_title(media.stem)).ratio()
+        parent_score = difflib.SequenceMatcher(None, movie_title, extract_title(media.parent.stem)).ratio()
+        matches.append(((media_score + parent_score) / 2, media))
     matches.sort(key=lambda x: x[0], reverse=True)
     return matches[:5]
 
@@ -105,6 +105,7 @@ def main() -> None:
                         manual_media = Path(input("Enter the full path to the media file: ").strip())
                         if manual_media.exists() and manual_media.is_file() and manual_media.suffix.lower() in VIDEO_EXTENSIONS:
                             link_media(manual_media, folder)
+                            break
                         else:
                             print("Invalid media file path.")
                     case 8:
