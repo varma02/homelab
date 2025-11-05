@@ -55,14 +55,13 @@ def main() -> None:
     args = parser.parse_args()
 
     work_dir = Path.cwd()
+    print(f"Working directory: {work_dir}")
     downloads_dir = Path(args.downloads_path)
+    print(f"Downloads directory: {downloads_dir}")
 
     movie_folders = [p for p in work_dir.iterdir() if p.is_dir()]
-    downloads_media = [p for p in downloads_dir.rglob('*') if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS]
-
-    print(f"Working directory: {work_dir}")
-    print(f"Downloads directory: {downloads_dir}")
     print(f"Found {len(movie_folders)} movie folders.")
+    downloads_media = [p for p in downloads_dir.rglob('*') if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS]
     print(f"Found {len(downloads_media)} media files in downloads.")
 
     for folder in movie_folders:
@@ -76,7 +75,7 @@ def main() -> None:
             matches = media_search(query, downloads_media)
             list_matches(matches)
             while True:
-                choice = user_menu(matches)
+                choice = user_menu(len(matches))
                 match choice:
                     case 1 | 2 | 3 | 4 | 5:
                         link_media(matches[choice - 1][1], folder)
