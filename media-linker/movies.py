@@ -5,7 +5,7 @@ import re
 
 VIDEO_EXTENSIONS = {'.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m4v'}
 TITLE_FILTER = r'([\ \_\-\(\)\[\]\.\/]|(1080p|720p|480p|1440p|UHD)|(bluray|webrip|webdl|hdtv)|(x264|x265|av1|h264|h265))+'
-SERIES_FILTER = r's\d{2}|series|season|\d{2}x\d{2}'
+SERIES_FILTER = r's\d{2}|series|season|\d{2}x\d{2}|s\d{1,2}e\d{1,2}|s\d{1,2}.{1,3}\d{1,2}'
 SAMPLE_FILTER = r'sample'
 
 def extract_title(name: str) -> str:
