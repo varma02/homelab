@@ -16,7 +16,7 @@ def media_search(query: str, downloads_media: list[Path]) -> list[tuple[float, P
     movie_title = extract_title(query)
     matches = []
     for media in downloads_media:
-        media_title = extract_title(media.parent)
+        media_title = extract_title(media.parent.stem)
         score = difflib.SequenceMatcher(None, movie_title, media_title).ratio()
         matches.append((score, media))
     matches.sort(key=lambda x: x[0], reverse=True)
