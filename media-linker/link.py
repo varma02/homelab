@@ -6,17 +6,16 @@ VIDEO_EXTENSIONS = {'.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m
 
 def extract_title(name: str) -> str:
     name = name.strip().lower()
-    name = name.replace(' ', '.')
+    name = name.replace(' ', '.').replace('_', '.').replace('-', '.')
     name = name.replace('(', '').replace(')', '')
-    bracket_pos = name.find('[')
-    name = name[:bracket_pos if bracket_pos != -1 else len(name)]
+    name = name.replace('[', '').replace(']', '')
     return name
 
 def media_search(query: str, downloads_media: list[Path]) -> list[tuple[float, Path]]:
     movie_title = extract_title(query)
     matches = []
     for media in downloads_media:
-        media_title = extract_title(media.parent.stem)
+        media_title = extract_title(media.parent.stem + '/' + media.stem)
         score = difflib.SequenceMatcher(None, movie_title, media_title).ratio()
         matches.append((score, media))
     matches.sort(key=lambda x: x[0], reverse=True)
@@ -25,7 +24,7 @@ def media_search(query: str, downloads_media: list[Path]) -> list[tuple[float, P
 def list_matches(matches: list[tuple[float, Path]]) -> None:
     print("Found potential matches:")
     for i, (score, media) in enumerate(matches, 1):
-        print(f"{i}: {media.name} (score: {score:.2f})")
+        print(f"{i}: {media.parent.stem}/{media.name} (score: {score:.2f})")
 
 def user_menu(max: int) -> int:
     while True:
@@ -50,19 +49,30 @@ def link_media(source: Path, destination: Path) -> None:
     print(f"Linked {source} to {link_path}")
 
 def main() -> None:
+    print("Movie Linker Script - by: varma01")
+    print("-----------------------------------")
+    print("Parsing arguments...", end=" ")
     parser = argparse.ArgumentParser(description="Link movies from downloads folder to Jellyfin movies folder.")
     parser.add_argument("downloads_path", help="Path to the downloads directory")
     args = parser.parse_args()
-
     work_dir = Path.cwd()
-    print(f"Working directory: {work_dir}")
     downloads_dir = Path(args.downloads_path)
+    print("OK")
+
+    print(f"Working directory: {work_dir}")
     print(f"Downloads directory: {downloads_dir}")
 
+    print("Scanning for movie folders...", end=" ")
     movie_folders = [p for p in work_dir.iterdir() if p.is_dir()]
+    print("OK")
+    print("Scanning downloads folder...", end=" ")
+    downloads_media = [p for p in downloads_dir.rglob('*') if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS and 'sample' not in p.name.lower()]
+    print("OK")
+
     print(f"Found {len(movie_folders)} movie folders.")
-    downloads_media = [p for p in downloads_dir.rglob('*') if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS]
     print(f"Found {len(downloads_media)} media files in downloads.")
+
+    print("-----------------------------------\n")
 
     for folder in movie_folders:
         print(f"Found movie folder: {folder.name} - ", end="")
