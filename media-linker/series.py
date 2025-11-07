@@ -4,10 +4,14 @@ from itertools import groupby
 from argparse import ArgumentParser
 import re
 
-
-PREFIX = ""
-print = lambda *args, **kwargs: __builtins__.print(PREFIX, *args, **kwargs)
-
+class CustomPrint():
+    def __init__(self):
+        self.PREFIX = ""
+    def __call__(self, *args, **kwds):
+        __builtins__.print(self.PREFIX, *args, **kwds)
+    def set_prefix(self, prefix: str) -> None:
+        self.PREFIX = prefix
+print = CustomPrint()
 
 VIDEO_EXTENSIONS = {'.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m4v'}
 SERIES_FILTER = r's\d{2}|series|season|specials|\d{2}x\d{2}|s\d{1,2}e\d{1,2}|s\d{1,2}.{1,3}\d{1,2}'
@@ -22,17 +26,24 @@ class Media:
         self.episode = episode
 
 
-def extract_episode_info(name: str) -> tuple[str, int, int] | None:
-    name = name.strip().lower()
-    m = re.search(W+r's(\d{2})[\w\.]{0,1}e(\d{2})'+W, name)
-    if m: return (re.sub(W, '', name[:m.start()]), int(m.group(1)), int(m.group(2)))
+def extract_episode_info(path: Path, layers: int) -> tuple[str, int, int] | None:
+    name = path.stem.strip().lower()
 
-    m = re.search(W+r'(\d{2})x(\d{2})'+W, name)
-    if m: return (re.sub(W, '', name[:m.start()]), int(m.group(1)), int(m.group(2)))
-    
-    m = re.search(W+r's(\d{2}) - e{0,1}(\d{2})'+W, name)
-    if m: return (re.sub(W, '', name[:m.start()]), int(m.group(1)), int(m.group(2)))
-    
+    for r in (
+        W+r's(\d{2})[\w\.]{0,1}e(\d{2})'+W,
+        W+r'(\d{2})x(\d{2})'+W,
+        W+r's(\d{2}) - e{0,1}(\d{2})'+W
+    ):
+        m = re.search(r, name)
+        if m:
+            if m.start() > 1:
+                name = name[:m.start()]
+            else:
+                parent = path.parents[-(layers+2)].stem.lower()
+                parent_s_pos = re.search(SERIES_FILTER, parent)
+                name = parent[:parent_s_pos.start() if parent_s_pos else None]
+            return (re.sub(W, '', name), int(m.group(1)), int(m.group(2)))
+
     return None
 
 def media_search(name: str, season: int, downloads_media: list[Media], layers: int):
@@ -94,7 +105,7 @@ def main() -> None:
         p.suffix.lower() in VIDEO_EXTENSIONS and \
         re.search(SERIES_FILTER, p.stem.lower() +"/"+ p.parent.stem.lower()) and \
         not re.search(SAMPLE_FILTER, p.stem.lower() +"/"+ p.parent.stem.lower()):
-            info = extract_episode_info(p.stem)
+            info = extract_episode_info(p, len(downloads_dir.parents))
             if info is not None:
                 downloads_media.append(Media(p, info[0], info[1], info[2]))
     print("OK")
@@ -107,7 +118,8 @@ def main() -> None:
     for series_folder in series_folders:
         print(f"Searching series folder: {series_folder.name}")
         for season_folder in sorted([f for f in series_folder.iterdir() if f.is_dir() and f.stem.strip().lower().startswith('season')]):
-            print(f"\t {season_folder.name} - ", end="")
+            print.set_prefix(" ")
+            print(f"{season_folder.name} - ", end="")
             has_media = any(f.suffix.lower() in VIDEO_EXTENSIONS for f in season_folder.rglob('*') if f.is_file())
             if has_media:
                 print("OK")
@@ -131,6 +143,7 @@ def main() -> None:
                             matches = media_search(query, season, downloads_media, len(downloads_dir.parents))
                             list_matches(matches)
                 print()
+            print.set_prefix("")
         print()
 
 
