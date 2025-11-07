@@ -5,6 +5,10 @@ from argparse import ArgumentParser
 import re
 
 
+PREFIX = ""
+print = lambda *args, **kwargs: __builtins__.print(PREFIX, *args, **kwargs)
+
+
 VIDEO_EXTENSIONS = {'.mp4', '.mkv', '.avi', '.mov', '.wmv', '.flv', '.webm', '.m4v'}
 SERIES_FILTER = r's\d{2}|series|season|specials|\d{2}x\d{2}|s\d{1,2}e\d{1,2}|s\d{1,2}.{1,3}\d{1,2}'
 SAMPLE_FILTER = r'sample'
@@ -33,8 +37,8 @@ def extract_episode_info(name: str) -> tuple[str, int, int] | None:
 
 def media_search(name: str, season: int, downloads_media: list[Media], layers: int):
     name = re.sub(W, '', name.strip().lower())
-    matches = [m for m in downloads_media if m[1].season == season]
-    matches = map(lambda x: (x[0], list(x[1])), groupby(matches, key=lambda x: x[1].path.parents[-(layers+1)]))
+    matches = [m for m in downloads_media if m.season == season]
+    matches = map(lambda x: (x[0], list(x[1])), groupby(matches, key=lambda x: x.path.parents[-(layers+1)]))
     matches = sorted(map(lambda x: (SequenceMatcher(None, name, x[1][0].title).ratio(), x), matches), key=lambda x: x[0], reverse=True)
     return matches[:5]
 
