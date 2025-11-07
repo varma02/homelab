@@ -121,7 +121,7 @@ def main() -> None:
                     choice = user_menu(len(matches))
                     match choice:
                         case 1 | 2 | 3 | 4 | 5:
-                            link_all(matches[choice - 1][1][1], series_folder)
+                            link_all(matches[choice - 1][1][1], season_folder)
                             break
                         case 6:
                             print("Skipping this season.")
