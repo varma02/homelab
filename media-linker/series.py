@@ -51,13 +51,14 @@ def media_search(name: str, season: int, downloads_media: list[Media], layers: i
     matches = [m for m in downloads_media if m.season == season]
     matches = map(lambda x: (x[0], list(x[1])), groupby(matches, key=lambda x: x.path.parents[-(layers+2)]))
     matches = sorted(map(lambda x: (SequenceMatcher(None, name, x[1][0].title).ratio(), x), matches), key=lambda x: x[0], reverse=True)
+    for m in matches:
+        print("DEBUG:", m[1][1][0].title)
     return matches[:5]
 
 def list_matches(matches) -> None:
     print("Found potential matches:")
-    for i, (score, (key, g)) in enumerate(matches, 1):
+    for i, (score, (key, _)) in enumerate(matches, 1):
         print(f"{i}: {key} (score: {score:.2f})")
-        print(g[0].title)
 
 def user_menu(max: int) -> int:
     while True:
