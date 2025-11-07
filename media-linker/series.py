@@ -38,7 +38,7 @@ def extract_episode_info(name: str) -> tuple[str, int, int] | None:
 def media_search(name: str, season: int, downloads_media: list[Media], layers: int):
     name = re.sub(W, '', name.strip().lower())
     matches = [m for m in downloads_media if m.season == season]
-    matches = map(lambda x: (x[0], list(x[1])), groupby(matches, key=lambda x: x.path.parents[-(layers)]))
+    matches = map(lambda x: (x[0], list(x[1])), groupby(matches, key=lambda x: x.path.parents[-(layers+2)]))
     matches = sorted(map(lambda x: (SequenceMatcher(None, name, x[1][0].title).ratio(), x), matches), key=lambda x: x[0], reverse=True)
     return matches[:5]
 
