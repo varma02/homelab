@@ -57,7 +57,7 @@ def list_matches(matches) -> None:
     print("Found potential matches:")
     for i, (score, (key, g)) in enumerate(matches, 1):
         print(f"{i}: {key} (score: {score:.2f})")
-        print(g[0].name)
+        print(g[0].title)
 
 def user_menu(max: int) -> int:
     while True:
