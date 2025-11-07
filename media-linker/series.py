@@ -55,8 +55,9 @@ def media_search(name: str, season: int, downloads_media: list[Media], layers: i
 
 def list_matches(matches) -> None:
     print("Found potential matches:")
-    for i, (score, (key, _)) in enumerate(matches, 1):
+    for i, (score, (key, g)) in enumerate(matches, 1):
         print(f"{i}: {key} (score: {score:.2f})")
+        print(g[0].name)
 
 def user_menu(max: int) -> int:
     while True:
@@ -148,4 +149,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    try: main()
+    except KeyboardInterrupt:
+        print.set_prefix("")
+        print("\nOperation cancelled by user.\n")
