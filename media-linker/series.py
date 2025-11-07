@@ -38,7 +38,7 @@ def extract_episode_info(name: str) -> tuple[str, int, int] | None:
 def media_search(name: str, season: int, downloads_media: list[Media], layers: int):
     name = re.sub(W, '', name.strip().lower())
     matches = [m for m in downloads_media if m.season == season]
-    matches = map(lambda x: (x[0], list(x[1])), groupby(matches, key=lambda x: x.path.parents[-(layers+1)]))
+    matches = map(lambda x: (x[0], list(x[1])), groupby(matches, key=lambda x: x.path.parents[-(layers)]))
     matches = sorted(map(lambda x: (SequenceMatcher(None, name, x[1][0].title).ratio(), x), matches), key=lambda x: x[0], reverse=True)
     return matches[:5]
 
@@ -49,7 +49,7 @@ def list_matches(matches) -> None:
 
 def user_menu(max: int) -> int:
     while True:
-        user_input = input(f"Select an option (1-{max}) or ('s' skip, 'm' manual entry, 'f' manual search): ").strip()
+        user_input = input(f"Select an option (1-{max}) or ('s' skip, 'f' manual search): ").strip()
         try:
             choice = int(user_input)
             if 1 <= choice <= max:
