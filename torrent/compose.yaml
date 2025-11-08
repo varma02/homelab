@@ -36,7 +36,7 @@ services:
       - "traefik.http.routers.qbittorrent.tls=true"
       - "traefik.http.routers.qbittorrent.tls.certresolver=cf"
 
-neworks:
+networks:
   internet:
     driver: bridge
   traefik:
