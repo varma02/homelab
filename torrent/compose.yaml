@@ -10,9 +10,9 @@ services:
     volumes:
       - ${QBTORRENT_CONFIG_VOLUME}:/config
       - ${QBTORRENT_DOWNLOADS_VOLUME}:/downloads
-    ports:
-      # - 16881:6881
-      # - 16881:6881/udp
+    # ports:
+    # - 16881:6881
+    # - 16881:6881/udp
 
     security_opt:
       - no-new-privileges:true
