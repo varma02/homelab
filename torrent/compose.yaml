@@ -10,7 +10,8 @@ services:
     volumes:
       - ${QBTORRENT_CONFIG_VOLUME}:/config
       - ${QBTORRENT_DOWNLOADS_VOLUME}:/downloads
-    # ports:
+    ports:
+      - 18081:8080
     # - 16881:6881
     # - 16881:6881/udp
 
@@ -31,10 +32,10 @@ services:
       - internet
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.qbittorrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
-      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
       - "traefik.http.routers.qbittorrent.tls=true"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
       - "traefik.http.routers.qbittorrent.tls.certresolver=cf"
+      - "traefik.http.routers.qbittorrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
 
 networks:
