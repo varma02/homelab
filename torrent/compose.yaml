@@ -1,6 +1,7 @@
 services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:5.1.2
+
     environment:
       - PUID=1000
       - PGID=1000
@@ -32,11 +33,11 @@ services:
       - internet
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.torrent.tls=true"
-      - "traefik.http.routers.torrent.entrypoints=websecure"
-      - "traefik.http.routers.torrent.tls.certresolver=cf"
-      - "traefik.http.routers.torrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
-      - "traefik.http.services.torrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.qbittorrent.tls=true"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=cf"
+      - "traefik.http.routers.qbittorrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
 
 networks:
   internet:
