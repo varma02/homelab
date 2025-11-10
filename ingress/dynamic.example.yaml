@@ -1,0 +1,15 @@
+http:
+  routers:
+    host1:
+      rule: Host(`host1.example.com`)
+      entryPoints:
+        - websecure
+      service: host1
+      tls:
+        certResolver: cf
+
+  services:
+    host1:
+      loadBalancer:
+        servers:
+          - url: http://192.168.0.2/
