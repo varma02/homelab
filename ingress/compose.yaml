@@ -1,7 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.4
-    command: --logLevel=DEBUG
+    image: traefik:v3.6
 
     security_opt:
       - no-new-privileges:true
