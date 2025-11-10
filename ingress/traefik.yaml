@@ -47,5 +47,5 @@ ping: {}
 
 logs:
   level: DEBUG
-  # format: common
-  # filePath: "/var/log/traefik.log"
+  format: common
+  filePath: "/var/log/traefik.log"

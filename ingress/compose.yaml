@@ -31,7 +31,7 @@ services:
       # traefik data stores
       - ../data/traefik/acme:/acme:rw
       # traefik logs
-      - ../logs/traefik:/var/log/traefik.log:rw
+      - ../logs/traefik:/var/log:rw
 
     env_file: ./.env
 
