@@ -46,6 +46,6 @@ certificatesResolvers:
 ping: {}
 
 logs:
-  level: INFO
-  format: common
-  filePath: "/var/log/traefik.log"
+  level: DEBUG
+  # format: common
+  # filePath: "/var/log/traefik.log"
