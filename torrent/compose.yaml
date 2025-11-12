@@ -26,18 +26,18 @@ services:
       start_interval: 5s
       start_period: 15s
       timeout: 5s
-      test: "curl --fail http://localhost:80 || exit 1"
+      test: "curl --fail http://localhost:8080 || exit 1"
 
     networks:
       - traefik
       - internet
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.qbittorrent.tls=true"
-      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
-      - "traefik.http.routers.qbittorrent.tls.certresolver=cf"
-      - "traefik.http.routers.qbittorrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
-      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.torrent.tls=true"
+      - "traefik.http.routers.torrent.entrypoints=websecure"
+      - "traefik.http.routers.torrent.tls.certresolver=cf"
+      - "traefik.http.routers.torrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
+      - "traefik.http.services.torrent.loadbalancer.server.port=8080"
 
 networks:
   internet:
