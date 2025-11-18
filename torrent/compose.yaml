@@ -33,11 +33,44 @@ services:
       - internet
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.torrent.tls=true"
-      - "traefik.http.routers.torrent.entrypoints=websecure"
-      - "traefik.http.routers.torrent.tls.certresolver=cf"
-      - "traefik.http.routers.torrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
-      - "traefik.http.services.torrent.loadbalancer.server.port=8080"
+      - "traefik.http.routers.qbittorrent.tls=true"
+      - "traefik.http.routers.qbittorrent.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent.tls.certresolver=cf"
+      - "traefik.http.routers.qbittorrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Budapest
+    volumes:
+      - ${PROWLARR_CONFIG_VOLUME}:/config
+    # ports:
+    #   - 9696:9696
+
+    restart: unless-stopped
+    healthcheck:
+      interval: 1m
+      retries: 5
+      start_interval: 5s
+      start_period: 15s
+      timeout: 5s
+      test: "curl --fail http://localhost:9696 || exit 1"
+    security_opt:
+      - no-new-privileges:true
+
+    networks:
+      - internet
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.tls=true"
+      - "traefik.http.routers.prowlarr.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr.tls.certresolver=cf"
+      - "traefik.http.routers.prowlarr.rule=Host(`${PROWLARR_WEB_HOST}`)"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
 
 networks:
   internet:
