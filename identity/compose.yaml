@@ -9,6 +9,7 @@ services:
       start_period: 15s
       test:
         [
+          "CMD",
           "/app/lldap",
           "healthcheck",
           "--config-file",
