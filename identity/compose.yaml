@@ -16,10 +16,10 @@ services:
         ]
       timeout: 5s
 
-    ports:
-      # - "3890:3890"    # regular LDAP
-      # - "6360:6360"    # LDAP Over SSL
-      # - "17170:17170"  # Admin web interface
+    # ports:
+    # - "3890:3890"    # regular LDAP
+    # - "6360:6360"    # LDAP Over SSL
+    # - "17170:17170"  # Admin web interface
     volumes:
       - ${LLDAP_DATA_VOLUME}:/data
     environment:
