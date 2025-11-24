@@ -1,0 +1,49 @@
+services:
+  lldap:
+    image: lldap/lldap:stable
+    restart: unless-stopped
+    healthcheck:
+      interval: 1m
+      retries: 5
+      start_interval: 5s
+      start_period: 15s
+      test:
+        [
+          "/app/lldap",
+          "healthcheck",
+          "--config-file",
+          "/data/lldap_config.toml",
+        ]
+      timeout: 5s
+
+    ports:
+      # - "3890:3890"    # regular LDAP
+      # - "6360:6360"    # LDAP Over SSL
+      # - "17170:17170"  # Admin web interface
+    volumes:
+      - ${LLDAP_DATA_VOLUME}:/data
+    environment:
+      - UID=1000
+      - GID=1000
+      - TZ=Europe/Budapest
+      - LLDAP_JWT_SECRET=${LLDAP_JWT_SECRET}
+      - LLDAP_KEY_SEED=${LLDAP_KEY_SEED}
+      - LLDAP_LDAP_BASE_DN=${LLDAP_BASE_DN}
+      - LLDAP_LDAP_USER_PASS=${LLDAP_USER_PASS}
+
+    networks:
+      - traefik
+      - lldap
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lldap.rule=Host(`${LLDAP_ADMIN_UI_HOST}`)"
+      - "traefik.http.services.lldap.loadbalancer.server.port=17170"
+      - "traefik.http.routers.lldap.entrypoints=websecure"
+      - "traefik.http.routers.lldap.tls=true"
+      - "traefik.http.routers.lldap.tls.certresolver=cf"
+
+networks:
+  traefik:
+    external: true
+  lldap:
+    external: true
