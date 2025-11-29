@@ -10,8 +10,8 @@ services:
 
     volumes:
       - ./config:/cfg/conf_files:ro
-      - ${COPYPARTY_CONFIG_VOLUME}:/cfg:z
-      - ${COPYPARTY_DATA_VOLUME}:/w:z
+      - ${COPYPARTY_CONFIG_VOLUME}:/cfg
+      - ${COPYPARTY_DATA_VOLUME}:/w
     environment:
       UID: 1000
       GID: 1000
