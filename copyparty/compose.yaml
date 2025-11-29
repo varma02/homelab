@@ -1,0 +1,41 @@
+services:
+  copyparty:
+    image: copyparty/ac:latest
+    user: "1000:1000"
+
+    # ports:
+    #   - 3923:3923
+
+    volumes:
+      - ./config:/cfg/conf_files:ro
+      - ${COPYPARTY_CONFIG_VOLUME}:/cfg:z
+      - ${COPYPARTY_DATA_VOLUME}:/w:z
+    environment:
+      UID: 1000
+      GID: 1000
+      TZ: Europe/Budapest
+      LD_PRELOAD: /usr/lib/libmimalloc-secure.so.NOPE # for less ram usage
+      # PYTHONUNBUFFERED: 1  # for unbuffered logs
+
+    restart: unless-stopped
+    stop_grace_period: 15s
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q 127.0.0.1:3923/?reset=/._"]
+      interval: 1m
+      timeout: 2s
+      retries: 5
+      start_period: 15s
+
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.copyparty.rule=Host(`${COPYPARTY_HOST}`)"
+      - "traefik.http.services.copyparty.loadbalancer.server.port=3923"
+      - "traefik.http.routers.copyparty.entrypoints=websecure"
+      - "traefik.http.routers.copyparty.tls.certresolver=cf"
+      - "traefik.http.routers.lldap.tls=true"
+
+networks:
+  traefik:
+    external: true
