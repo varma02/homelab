@@ -1,7 +1,6 @@
 services:
   copyparty:
     image: copyparty/ac:latest
-    user: "1000:1000"
     command:
       - -c /cfg/conf_files/global.conf
 
