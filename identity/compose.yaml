@@ -42,6 +42,7 @@ services:
       - "traefik.http.routers.lldap.entrypoints=websecure"
       - "traefik.http.routers.lldap.tls=true"
       - "traefik.http.routers.lldap.tls.certresolver=cf"
+      - "traefik.http.routers.dashboard.middlewares=tailnet-whitelist@file"
 
 networks:
   traefik:
