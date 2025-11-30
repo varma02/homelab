@@ -25,7 +25,7 @@ services:
     volumes:
       # traefik configuration
       - ./traefik.yaml:/etc/traefik/traefik.yaml:ro
-      - ./dynamic.yaml:/etc/traefik/dynamic/dynamic.yaml:ro
+      - ./config:/etc/traefik/dynamic:ro
       # docker socket access
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # traefik data stores

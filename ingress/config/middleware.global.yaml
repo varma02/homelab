@@ -1,0 +1,6 @@
+http:
+  middlewares:
+    tailnet-whitelist:
+      ipWhiteList:
+        sourceRange:
+          - "100.64.0.0/10"

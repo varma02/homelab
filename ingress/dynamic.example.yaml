@@ -13,9 +13,3 @@ http:
       loadBalancer:
         servers:
           - url: http://192.168.0.2/
-
-  middlewares:
-    tailnet-whitelist:
-      ipWhiteList:
-        sourceRange:
-          - "100.64.0.0/10"
