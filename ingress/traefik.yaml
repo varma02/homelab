@@ -49,3 +49,19 @@ logs:
   level: DEBUG
   format: common
   filePath: "/logs/traefik.log"
+
+accessLog:
+  format: common
+  filePath: "/logs/access.log"
+  bufferingSize: 10
+  fields:
+    defaultMode: keep
+    headers:
+      defaultMode: keep
+      names:
+        Authorization: drop
+        Set-Cookie: drop
+        Cookie: drop
+        WWW-Authenticate: drop
+        Proxy-Authorization: drop
+        Proxy-Authenticate: drop

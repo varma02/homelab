@@ -29,9 +29,9 @@ services:
       # docker socket access
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # traefik data stores
-      - ${TRAEFIK_ACME_VOLUME}:/acme:rw
+      - ${TRAEFIK_ACME_VOLUME}:/acme
       # traefik logs
-      # - ../logs/traefik:/var/log:rw
+      - ../logs/traefik:/logs
 
     env_file: ./.env
 
