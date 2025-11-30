@@ -42,6 +42,7 @@ services:
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=cf"
+      - "traefik.http.routers.dashboard.middlewares=tailnet-whitelist@file"
 
 networks:
   traefik:
