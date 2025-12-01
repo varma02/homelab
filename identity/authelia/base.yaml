@@ -86,11 +86,11 @@ privacy_policy:
 ##
 session:
   cookies:
-    name: 'authelia_session'
-    same_site: 'lax'
-    inactivity: '20 minutes'
-    expiration: '5 hours'
-    remember_me: '2 months'
+    - name: 'authelia_session'
+      same_site: 'lax'
+      inactivity: '20 minutes'
+      expiration: '5 hours'
+      remember_me_duration: '2 months'
 
 
 ##
