@@ -84,13 +84,13 @@ privacy_policy:
 ##
 ## Session Provider Configuration
 ##
-session:
-  cookies:
-    - name: 'authelia_session'
-      same_site: 'lax'
-      inactivity: '20 minutes'
-      expiration: '5 hours'
-      remember_me_duration: '2 months'
+# session:
+#   cookies:
+#     - name: 'authelia_session'
+#       same_site: 'lax'
+#       inactivity: '20 minutes'
+#       expiration: '5 hours'
+#       remember_me_duration: '2 months'
 
 
 ##
