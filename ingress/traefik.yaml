@@ -15,12 +15,6 @@ entryPoints:
   web:
     address: ":80"
     http:
-      forwardedHeaders:
-        insecure: false
-        trustedIPs: []
-      proxyProtocol:
-        insecure: false
-        trustedIPs: []
       redirections:
         entryPoint:
           to: websecure
@@ -30,12 +24,6 @@ entryPoints:
   websecure:
     address: ":443"
     http:
-      forwardedHeaders:
-        insecure: false
-        trustedIPs: []
-      proxyProtocol:
-        insecure: false
-        trustedIPs: []
       tls:
         options: default
         certResolver: le
