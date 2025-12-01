@@ -50,9 +50,6 @@ services:
     image: "authelia/authelia"
     hostname: "authelia"
     restart: "unless-stopped"
-    command:
-      - "--config=/config/configuration.yaml"
-      - "--config=/config/rules.yaml"
 
     volumes:
       - ./authelia:/config:ro
@@ -61,6 +58,7 @@ services:
     env_file: .env
     environment:
       TZ: "Europe/Budapest"
+      X_AUTHELIA_CONFIG: "/config/"
 
     networks:
       - traefik
