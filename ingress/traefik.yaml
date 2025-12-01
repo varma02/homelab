@@ -49,7 +49,7 @@ log:
   level: WARN
   format: json
   maxSize: 50MB
-  maxAge: 30d
+  maxAge: 720
   filePath: "/logs/traefik.log"
 
 accessLog:
