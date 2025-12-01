@@ -52,7 +52,7 @@ services:
     restart: "unless-stopped"
 
     volumes:
-      - ./authelia.yaml:/config/configuration.yaml:ro
+      - ./authelia.yaml:/config/configuration.yml:ro
       - "${AUTHELIA_CONFIG_VOLUME}:/config"
       # - "${AUTHELIA_CERTS_VOLUME}:/certificates"
     env_file: .env
