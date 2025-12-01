@@ -48,7 +48,7 @@ ping: {}
 log:
   level: WARN
   format: json
-  maxSize: 50MB
+  maxSize: 50
   maxAge: 720
   filePath: "/logs/traefik.log"
 
