@@ -1,0 +1,14 @@
+identity_validation:
+  reset_password:
+    jwt_secret: "${AUTHELIA_JWT_SECRET}"
+
+session:
+  secret: "${AUTHELIA_SESSION_SECRET}"
+
+authentication_backend:
+  ldap:
+    implementation: 'lldap'
+    address: 'ldap://lldap:3890'
+    base_dn: '${LLDAP_BASE_DN}'
+    user: '${LLDAP_BIND_DN}'
+    password: '${LLDAP_BIND_PASS}'

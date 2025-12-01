@@ -15,6 +15,12 @@ entryPoints:
   web:
     address: ":80"
     http:
+      forwardedHeaders:
+        insecure: false
+        trustedIPs: []
+      proxyProtocol:
+        insecure: false
+        trustedIPs: []
       redirections:
         entryPoint:
           to: websecure
@@ -24,6 +30,12 @@ entryPoints:
   websecure:
     address: ":443"
     http:
+      forwardedHeaders:
+        insecure: false
+        trustedIPs: []
+      proxyProtocol:
+        insecure: false
+        trustedIPs: []
       tls:
         options: default
         certResolver: le
@@ -45,13 +57,15 @@ certificatesResolvers:
 
 ping: {}
 
-logs:
-  level: DEBUG
-  format: common
+log:
+  level: WARN
+  format: json
+  maxSize: 50MB
+  maxAge: 30d
   filePath: "/logs/traefik.log"
 
 accessLog:
-  format: common
+  format: json
   filePath: "/logs/access.log"
   bufferingSize: 10
   fields:
@@ -65,3 +79,7 @@ accessLog:
         WWW-Authenticate: drop
         Proxy-Authorization: drop
         Proxy-Authenticate: drop
+
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false

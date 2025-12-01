@@ -1,6 +1,8 @@
 services:
   lldap:
     image: lldap/lldap:stable
+    hostname: "lldap"
+
     restart: unless-stopped
     healthcheck:
       interval: 1m
@@ -42,6 +44,31 @@ services:
       - "traefik.http.routers.lldap.entrypoints=websecure"
       - "traefik.http.routers.lldap.tls=true"
       - "traefik.http.routers.lldap.tls.certresolver=cf"
+      - "traefik.http.routers.dashboard.middlewares=tailnet-whitelist@file"
+
+  authelia:
+    image: "authelia/authelia"
+    hostname: "authelia"
+    restart: "unless-stopped"
+
+    volumes:
+      - ./authelia.yaml:/config/config.yaml:ro
+      - "${AUTHELIA_CONFIG_VOLUME}:/config"
+      # - "${AUTHELIA_CERTS_VOLUME}:/certificates"
+    env_file: .env
+    environment:
+      TZ: "Europe/Budapest"
+
+    networks:
+      - traefik
+      - lldap
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authelia.rule=Host(`${AUTHELIA_HOST}`)"
+      - "traefik.http.services.authelia.loadbalancer.server.port=9091"
+      - "traefik.http.routers.authelia.entrypoints=websecure"
+      - "traefik.http.routers.authelia.tls=true"
+      - "traefik.http.routers.authelia.tls.certresolver=cf"
       - "traefik.http.routers.dashboard.middlewares=tailnet-whitelist@file"
 
 networks:
