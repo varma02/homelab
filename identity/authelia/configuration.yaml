@@ -22,7 +22,7 @@ log:
 ##
 totp:
   disable: false
-  issuer: '${AUTHELIA_HOST}'
+  issuer: '${AUTHELI_HOST}'
   algorithm: 'SHA1'
   digits: 6
   period: 30
@@ -36,7 +36,7 @@ totp:
 webauthn:
   disable: false
   enable_passkey_login: true
-  display_name: '${AUTHELIA_HOST}'
+  display_name: '${AUTHELI_HOST}'
   attestation_conveyance_preference: 'indirect'
   timeout: '60 seconds'
 
@@ -48,7 +48,7 @@ identity_validation:
   reset_password:
     jwt_lifespan: '15 minutes'
     jwt_algorithm: 'HS256'
-    jwt_secret: '${AUTHELIA_JWT_SECRET}'
+    jwt_secret: '${AUTHELI_JWT_SECRET}'
 
 
 ##
@@ -91,11 +91,11 @@ privacy_policy:
 ## Session Provider Configuration
 ##
 session:
-  secret: '${AUTHELIA_SESSION_SECRET}'
+  secret: '${AUTHELI_SESSION_SECRET}'
   cookies:
       name: 'authelia_session'
       domain: '${GLOBAL_BASE_DOMAIN}'
-      authelia_url: '${AUTHELIA_HOST}'
+      authelia_url: '${AUTHELI_HOST}'
       same_site: 'lax'
       inactivity: '20 minutes'
       expiration: '5 hours'
@@ -117,7 +117,7 @@ regulation:
 ## Storage Provider Configuration
 ##
 storage:
-  encryption_key: '${AUTHELIA_STORAGE_ENCRYPTION_KEY}'
+  encryption_key: '${AUTHELI_STORAGE_ENCRYPTION_KEY}'
   local:
     path: '/app_data/db.sqlite3'
 
