@@ -72,8 +72,7 @@ services:
       - "traefik.http.services.authelia.loadbalancer.server.port=9091"
       - "traefik.http.routers.authelia.entrypoints=websecure"
       - "traefik.http.routers.authelia.tls=true"
-      - "traefik.http.routers.authelia.tls.certresolver=cf"
-      - "traefik.http.routers.dashboard.middlewares=tailnet-whitelist@file"
+      - "traefik.http.routers.authelia.tls.certresolver=le"
 
 networks:
   traefik:
