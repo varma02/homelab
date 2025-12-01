@@ -58,7 +58,7 @@ services:
     env_file: .env
     environment:
       TZ: "Europe/Budapest"
-      X_AUTHELIA_CONFIG: "/config/configuration.yaml,/config/rules.yaml"
+      X_AUTHELIA_CONFIG: "/config/base.yaml,/config/secrets.yaml,/config/rules.yaml"
 
     networks:
       - traefik
