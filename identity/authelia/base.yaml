@@ -85,12 +85,12 @@ privacy_policy:
 ## Session Provider Configuration
 ##
 session:
-  # cookies:
-  #   name: 'authelia_session'
-  #   same_site: 'lax'
-  #   inactivity: '20 minutes'
-  #   expiration: '5 hours'
-  #   remember_me: '2 months'
+  cookies:
+    name: 'authelia_session'
+    same_site: 'lax'
+    inactivity: '20 minutes'
+    expiration: '5 hours'
+    remember_me: '2 months'
 
 
 ##
