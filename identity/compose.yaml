@@ -50,9 +50,14 @@ services:
     image: "authelia/authelia"
     hostname: "authelia"
     restart: "unless-stopped"
+    command:
+      - "--config=/config/configuration.yaml"
+      - "--config=/config/rules.yaml"
 
     volumes:
       - ./authelia:/config:ro
+      - ${AUTHELIA_DATA_VOLUME}:/app_data
+      - ../logs/authelia:/logs
     env_file: .env
     environment:
       TZ: "Europe/Budapest"

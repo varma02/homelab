@@ -1,0 +1,135 @@
+###############################################################################
+##                           Authelia Configuration                          ##
+###############################################################################
+
+
+##
+## Server Configuration
+##
+theme: 'dark'   # light, dark, grey, auto
+server:
+  address: 'tcp://:9091/'
+  asset_path: '/app_data/assets/'
+
+
+##
+## Log Configuration
+##
+log:
+  level: 'info'
+  format: 'json'
+  file_path: '/logs/authelia.log'
+  keep_stdout: false
+
+
+##
+## TOTP Configuration
+##
+totp:
+  disable: false
+  issuer: '${AUTHELIA_HOST}'
+  algorithm: 'SHA1'
+  digits: 6
+  period: 30
+  skew: 1
+  secret_size: 32
+
+
+##
+## WebAuthn Configuration
+##
+webauthn:
+  disable: false
+  enable_passkey_login: true
+  display_name: '${AUTHELIA_HOST}'
+  attestation_conveyance_preference: 'indirect'
+  timeout: '60 seconds'
+
+
+##
+## Identity Validation Configuration
+##
+identity_validation:
+  reset_password:
+    jwt_lifespan: '15 minutes'
+    jwt_algorithm: 'HS256'
+    jwt_secret: '${AUTHELIA_JWT_SECRET}'
+
+
+##
+## NTP Configuration
+##
+ntp:
+  disable_startup_check: true
+  disable_failure: true
+
+
+##
+## Authentication Backend Provider Configuration
+##
+authentication_backend:
+  ldap:
+    implementation: 'lldap'
+    address: 'ldap://lldap:3890'
+    base_dn: '${LLDAP_BASE_DN}'
+    user: '${LLDAP_BIND_DN}'
+    password: '${LLDAP_BIND_PASS}'
+
+
+##
+## Password Policy Configuration.
+##
+password_policy:
+  zxcvbn:
+    enabled: true
+    min_score: 2
+
+
+##
+## Privacy Policy Configuration
+##
+privacy_policy:
+  enabled: false
+
+
+##
+## Session Provider Configuration
+##
+session:
+  secret: '${AUTHELIA_SESSION_SECRET}'
+  cookies:
+      name: 'authelia_session'
+      domain: '${GLOBAL_BASE_DOMAIN}'
+      authelia_url: '${AUTHELIA_HOST}'
+      same_site: 'lax'
+      inactivity: '20 minutes'
+      expiration: '5 hours'
+      remember_me: '2 months'
+
+
+##
+## Regulation Configuration
+##
+regulation:
+  modes:
+    - 'user'
+  max_retries: 5
+  find_time: '5 minutes'
+  ban_time: '5 minutes'
+
+
+##
+## Storage Provider Configuration
+##
+storage:
+  encryption_key: '${AUTHELIA_STORAGE_ENCRYPTION_KEY}'
+  local:
+    path: '/app_data/db.sqlite3'
+
+
+##
+## Notification Provider
+##
+notifier:
+  filesystem:
+    filename: '/app_data/notification.txt'
