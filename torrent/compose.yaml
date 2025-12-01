@@ -38,7 +38,7 @@ services:
       - "traefik.http.routers.qbittorrent.tls.certresolver=cf"
       - "traefik.http.routers.qbittorrent.rule=Host(`${QBTORRENT_WEB_HOST}`)"
       - "traefik.http.services.qbittorrent.loadbalancer.server.port=8080"
-      - "traefik.http.routers.dashboard.middlewares=tailnet-whitelist@file"
+      - "traefik.http.routers.qbittorrent.middlewares=tailnet-whitelist@file"
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -72,6 +72,7 @@ services:
       - "traefik.http.routers.prowlarr.tls.certresolver=cf"
       - "traefik.http.routers.prowlarr.rule=Host(`${PROWLARR_WEB_HOST}`)"
       - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+      - "traefik.http.routers.prowlarr.middlewares=tailnet-whitelist@file"
 
 networks:
   internet:

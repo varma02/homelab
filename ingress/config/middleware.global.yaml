@@ -1,7 +1,7 @@
 http:
   middlewares:
     tailnet-whitelist:
-      ipWhiteList:
+      IPAllowListc:
         sourceRange:
           - "100.64.0.0/10"
     

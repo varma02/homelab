@@ -36,7 +36,7 @@ services:
       - "traefik.http.routers.pihole.entrypoints=websecure"
       - "traefik.http.routers.pihole.tls=true"
       - "traefik.http.routers.pihole.tls.certresolver=cf"
-      - "traefik.http.routers.dashboard.middlewares=tailnet-whitelist@file"
+      - "traefik.http.routers.pihole.middlewares=tailnet-whitelist@file"
 
 networks:
   internet:

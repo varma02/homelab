@@ -41,7 +41,8 @@ certificatesResolvers:
       storage: "/acme/cf.json"
       dnsChallenge:
         provider: cloudflare
-        delayBeforeCheck: 10
+        propagation:
+          delayBeforeChecks: 10
 
 ping: {}
 

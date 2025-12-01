@@ -44,7 +44,7 @@ services:
       - "traefik.http.routers.lldap.entrypoints=websecure"
       - "traefik.http.routers.lldap.tls=true"
       - "traefik.http.routers.lldap.tls.certresolver=cf"
-      - "traefik.http.routers.dashboard.middlewares=tailnet-whitelist@file"
+      - "traefik.http.routers.lldap.middlewares=tailnet-whitelist@file"
 
   authelia:
     image: "authelia/authelia"
