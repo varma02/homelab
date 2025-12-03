@@ -37,7 +37,6 @@ services:
       - "traefik.http.routers.copyparty.tls.certresolver=cf"
       - "traefik.http.routers.copyparty.tls=true"
       - "traefik.http.routers.copyparty.middlewares=authelia@file"
-      - "traefik.http.routers.copyparty.priority=10"
 
 networks:
   traefik:
