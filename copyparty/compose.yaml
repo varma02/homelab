@@ -39,14 +39,6 @@ services:
       - "traefik.http.routers.copyparty.middlewares=authelia@file"
       - "traefik.http.routers.copyparty.priority=10"
 
-      # Router for /share that skips Authelia
-      - "traefik.http.routers.copyparty-share.rule=Host(`${COPYPARTY_HOST}`) && PathPrefix(`/shr`)"
-      - "traefik.http.routers.copyparty-share.entrypoints=websecure"
-      - "traefik.http.routers.copyparty-share.tls=true"
-      - "traefik.http.routers.copyparty-share.tls.certresolver=cf"
-      - "traefik.http.routers.copyparty-share.service=copyparty"
-      - "traefik.http.routers.copyparty-share.priority=100"
-
 networks:
   traefik:
     external: true
