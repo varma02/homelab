@@ -8,10 +8,12 @@ services:
     env_file: ./.env
     environment:
       - TZ=Europe/Budapest
-      # - FTLCONF_webserver_api_password=changeme
       - FTLCONF_dns_listeningMode=all
+      - FTLCONF_webserver_api_password=
+      - WEBPASSWORD_FILE=/webpasswd
     volumes:
       - ${PIHOLE_CONFIG_VOLUME}:/etc/pihole
+      - ./webpasswd:/webpasswd
 
     security_opt:
       - no-new-privileges:true
