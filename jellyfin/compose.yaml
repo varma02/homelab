@@ -16,6 +16,11 @@ services:
       - ${JELLYFIN_MEDIA_VOLUME}:/media
       - ${DONWLOADS_READONLY_VOLUME}:/downloads:ro
 
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - video
+
     restart: "unless-stopped"
     healthcheck:
       interval: 1m
