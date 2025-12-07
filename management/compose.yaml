@@ -13,8 +13,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${ARCANE_DATA_VOLUME}:/app/data
-    env_file:
-      - ./.env
+    env_file: ./.env
     environment:
       PUID: "1000"
       PGID: "1000"
