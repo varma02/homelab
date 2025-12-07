@@ -118,3 +118,34 @@ storage:
 notifier:
   filesystem:
     filename: '/app_data/notification.txt'
+
+
+##
+## Identity Providers
+##
+identity_providers:
+
+  ##
+  ## OpenID Connect
+  ##
+  oidc:
+    enable_client_debug_messages: false
+    minimum_parameter_entropy: 8
+    enforce_pkce: 'public_clients_only'
+    enable_pkce_plain_challenge: false
+    enable_jwt_access_token_stateless_introspection: false
+    discovery_signed_response_alg: 'none'
+    require_pushed_authorization_requests: false
+    lifespans:
+      access_token: '1h'
+      authorize_code: '1m'
+      id_token: '1h'
+      refresh_token: '90m'
+    cors:
+      endpoints:
+        - 'authorization'
+        - 'token'
+        - 'revocation'
+        - 'introspection'
+        - 'pushed-authorization-request'
+        - 'userinfo'
