@@ -16,7 +16,7 @@ services:
     env_file:
       - ./.env
     environment:
-      - APP_URL=${ARCANE_HOST}
+      - APP_URL=https://${ARCANE_HOST}
       - PUID=1000
       - PGID=1000
       - LOG_LEVEL=info
