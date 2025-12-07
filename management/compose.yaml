@@ -30,6 +30,7 @@ services:
 
     networks:
       - traefik
+      - internet
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.arcane.tls=true"
@@ -40,5 +41,7 @@ services:
       - "traefik.http.routers.arcane.middlewares=tailnet-whitelist@file,authelia@file"
 
 networks:
+  internet:
+    driver: bridge
   traefik:
     external: true
