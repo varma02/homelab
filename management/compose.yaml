@@ -23,7 +23,10 @@ services:
       - APP_URL: "https://${ARCANE_HOST}"
       - OIDC_ENABLED: "true"
       - OIDC_CLIENT_ID: "arcane"
-      - OIDC_SCOPES: "openid email profile"
+      - OIDC_SCOPES: "openid email profile groups"
+      - OIDC_ADMIN_CLIAM: "groups"
+      - OIDC_ADMIN_VALUE: "admin"
+      - OIDC_MERGE_ACCOUNTS: "true"
       - DATABASE_URL: "file:data/arcane.db?_pragma=journal_mode(WAL)&_pragma=busy_timeout(2500)&_txlock=immediate"
 
     networks:
