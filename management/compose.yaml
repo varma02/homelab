@@ -26,6 +26,11 @@ services:
       OIDC_ADMIN_CLIAM: "groups"
       OIDC_ADMIN_VALUE: "admin"
       OIDC_MERGE_ACCOUNTS: "true"
+      UI_CONFIGURATION_DISABLED: "true"
+      ANALYTICS_DISABLED: "true"
+      PORT: "3552"
+      ENABLE_GAVATAR: "false"
+      AUTH_LOCAL_ENABLED: "false"
       DATABASE_URL: "file:data/arcane.db?_pragma=journal_mode(WAL)&_pragma=busy_timeout(2500)&_txlock=immediate"
 
     networks:
