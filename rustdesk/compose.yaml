@@ -1,0 +1,35 @@
+services:
+  hbbs:
+    image: rustdesk/rustdesk-server:latest
+    command: hbbs
+    restart: unless-stopped
+    depends_on:
+      - hbbr
+
+    volumes:
+      - ${RUSTDESK_DATA_VOLUME}:/root
+
+    networks:
+      - internal
+    ports:
+      - "21115:21115/tcp"
+      - "21116:21116/udp"
+      - "21116:21116/tcp"
+
+  hbbr:
+    image: rustdesk/rustdesk-server:latest
+    command: hbbr
+    restart: unless-stopped
+
+    volumes:
+      - ${RUSTDESK_DATA_VOLUME}:/root
+
+    networks:
+      - internal
+    ports:
+      - "21117:21117/tcp"
+
+networks:
+  internal:
+    driver: bridge
+    internal: true
