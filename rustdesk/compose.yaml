@@ -10,7 +10,7 @@ services:
       - ${RUSTDESK_DATA_VOLUME}:/root
 
     networks:
-      - internal
+      - bridge
     ports:
       - "21115:21115/tcp"
       - "21116:21116/udp"
@@ -25,11 +25,10 @@ services:
       - ${RUSTDESK_DATA_VOLUME}:/root
 
     networks:
-      - internal
+      - bridge
     ports:
       - "21117:21117/tcp"
 
 networks:
-  internal:
+  bridge:
     driver: bridge
-    internal: true
