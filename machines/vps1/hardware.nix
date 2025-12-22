@@ -10,10 +10,11 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   
   networking.useDHCP = false;
-  systemd.network.enable = true;
-  systemd.network.networks."99-ethernet-default-dhcp" = {
-    matchConfig.Name = "en* eth*";
-    networkConfig.DHCP = "yes";
+  networking.useNetworkd = true;
+  services.cloud-init.enable = true;
+  services.cloud-init.network.enable = true;
+  services.cloud-init.settings = {
+    datasource_list = [ "Hetzner" ];
   };
 
   disko.devices = {

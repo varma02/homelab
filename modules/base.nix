@@ -15,6 +15,7 @@
     shell = pkgs.zsh;
     password = "1234"; # TODO: REMOVE FOR PROD
   };
+  console.keyMap = "hu";
   
   # --- SSH ---
   services.openssh = {
