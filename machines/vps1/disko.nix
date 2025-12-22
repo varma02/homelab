@@ -24,16 +24,17 @@
           };
           root = {
             size = "100%";
+            extraArgs = [ "-f" ];
             content = {
               type = "btrfs";
               subvolumes = {
-                "/root" = {
+                "@root" = {
                   mountpoint = "/";
                 };
-                "/persist" = {
+                "@persist" = {
                   mountpoint = "/persist";
                 };
-                "/swap" = {
+                "@swap" = {
                   mountpoint = "/.swapvol";
                   swap = {
                     swapfile.size = "4G";
