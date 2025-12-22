@@ -23,14 +23,14 @@
       PermitRootLogin = "no";
       PasswordAuthentication = false;
     };
-    # openFirewall = true;
+    openFirewall = true;
   };
 
   # --- FIREWALL ---
   networking.firewall = {
     enable = false;
-  #   allowedTCPPorts = [ ];
-  #   allowedUDPPorts = [ ];
+    allowedTCPPorts = [ ];
+    allowedUDPPorts = [ ];
   };
 
   # --- SYSTEM ---

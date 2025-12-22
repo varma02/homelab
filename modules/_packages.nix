@@ -5,6 +5,9 @@
     parted
     vim
     curl
+    dig
+    net-tools
+    btop
   ];
   
   programs.zsh = {
