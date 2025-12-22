@@ -1,0 +1,27 @@
+{
+	"name": "Debian with Nix",
+	"image": "mcr.microsoft.com/devcontainers/base:trixie",
+	"features": {
+		"ghcr.io/devcontainers/features/nix:1": {
+			"version": "latest"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"jnoortheen.nix-ide"
+			]
+		}
+	},
+	"runArgs": [
+		"--network=host"
+	]
+	,
+	"mounts": [
+		"source=${localEnv:HOME}/.var/app/com.bitwarden.desktop/data/.bitwarden-ssh-agent.sock,target=/run/bitwarden-ssh-agent.sock,type=bind,consistency=cached"
+	],
+	"containerEnv": {
+		"SSH_AUTH_SOCK": "/run/bitwarden-ssh-agent.sock"
+	},
+	"postCreateCommand": "bash .devcontainer/ssh-setup.sh"
+}

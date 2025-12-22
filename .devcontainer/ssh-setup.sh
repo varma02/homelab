@@ -1,0 +1,1 @@
+find /tmp -maxdepth 1 -name 'vscode-ssh-auth-*.sock' -delete
