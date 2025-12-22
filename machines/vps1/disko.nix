@@ -22,14 +22,15 @@
             size = "100%";
             content = {
               type = "btrfs";
+              extraArgs = [ "-f" ]; # force format
               subvolumes = {
-                "@root" = {
+                "/root" = {
                   mountpoint = "/";
                 };
-                "@persist" = {
+                "/persist" = {
                   mountpoint = "/persist";
                 };
-                "@swap" = {
+                "/swap" = {
                   mountpoint = "/.swapvol";
                   swap = {
                     swapfile.size = "4G";
