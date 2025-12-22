@@ -4,7 +4,13 @@
     git
     parted
     vim
-    zsh
-    
   ];
+  programs.zsh = {
+    enable = true;
+    ohMyZsh = {
+      enable = true;
+      theme = "amuse";
+      plugins = [ "git" "docker" ];
+    };
+  };
 }
