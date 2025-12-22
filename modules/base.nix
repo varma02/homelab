@@ -3,16 +3,6 @@
     ./_packages.nix
   ];
 
-  # --- BOOT ---
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 5;
-    };
-    efi.canTouchEfiVariables = true;
-    timeout = 1;
-  };
-
   # --- USER ---
   users.mutableUsers = false;
   users.users.${vars.userName} = {
