@@ -28,11 +28,7 @@
   };
 
   # --- FIREWALL ---
-  networking.firewall = {
-    enable = false;
-    allowedTCPPorts = [ ];
-    allowedUDPPorts = [ ];
-  };
+  networking.firewall.enable = true;
 
   # --- SYSTEM ---
   nix = {

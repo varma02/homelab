@@ -1,4 +1,4 @@
-{config, ...}: {
+{ config, ... }: {
   sops.secrets."tailscale-authkey" = {};
 
   services.tailscale = {
