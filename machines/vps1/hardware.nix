@@ -11,6 +11,10 @@
   
   networking.useDHCP = false;
   systemd.network.enable = true;
+  systemd.network.networks."99-ethernet-default-dhcp" = {
+    matchConfig.Name = "en* eth*";
+    networkConfig.DHCP = "yes";
+  };
 
   disko.devices = {
     disk.main = {
