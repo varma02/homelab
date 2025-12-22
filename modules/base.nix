@@ -18,8 +18,11 @@
   # --- SSH ---
   services.openssh = {
     enable = true;
-    settings.PermitRootLogin = "no";
-    settings.PasswordAuthentication = false;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+    };
+    openFirewall = true;
   };
 
   # --- SYSTEM ---
