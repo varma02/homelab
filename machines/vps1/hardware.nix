@@ -1,5 +1,32 @@
 { lib, inputs, ... }:
 {
+  boot = {
+    initrd.availableKernelModules = [ "xhci_pci" "virtio_pci" "virtio_scsi" "usbhid" "sr_mod" ];
+    initrd.kernelModules = [ "btrfs" ];
+    loader.grub.devices = [ "/dev/sda" ];
+  };
+
+  # # File systems
+  # fileSystems."/" = {
+  #   device = "/dev/disk/by-label/nixos";
+  #   fsType = "btrfs";
+  #   options = [ "subvol=@rootfs" "compress=zstd" "noatime" ];
+  # };
+
+  # fileSystems."/boot" = {
+  #   device = "/dev/disk/by-label/ESP";
+  #   fsType = "vfat";
+  #   options = [ "fmask=0077" "dmask=0077" ];
+  # };
+
+  # fileSystems."/persist" = {
+  #   device = "/dev/disk/by-label/nixos";
+  #   fsType = "btrfs";
+  #   options = [ "subvol=@persist" "compress=zstd" "noatime" ];
+  # };
+
+  # swapDevices = [ ];
+
   disko.devices = {
     disk.main = {
       device = lib.mkDefault "/dev/sda";
@@ -22,11 +49,10 @@
               mountOptions = [ "umask=0077" ];
             };
           };
-          root = {
+          nixos = {
             size = "100%";
             content = {
               type = "btrfs";
-              extraArgs = [ "-f" ];
               subvolumes = {
                 "@rootfs" = {
                   mountpoint = "/";
