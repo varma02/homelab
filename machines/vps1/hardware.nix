@@ -4,11 +4,9 @@
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
-  boot = {
-    initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" ];
-    initrd.kernelModules = [ "btrfs" ];
-    loader.grub.devices = [ "/dev/sda" ];
-  };
+  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" ];
+  boot.initrd.kernelModules = [ "btrfs" ];
+  boot.loader.grub.devices = [ "/dev/sda" ];
 
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
