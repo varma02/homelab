@@ -19,7 +19,7 @@
         partitions = {
           boot = {
             name = "boot";
-            size = "1M";
+            size = "5M";
             type = "EF02";
           };
           ESP = {
