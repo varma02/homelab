@@ -7,37 +7,35 @@
       content = {
         type = "gpt";
         partitions = {
-          boot = {
-            name = "boot";
-            size = "5M";
-            type = "EF02";
-          };
-          esp = {
-            name = "ESP";
+          ESP = {
+            priority = 1;
             size = "1G";
             type = "EF00";
             content = {
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
+              mountOptions = [ "umask=0077"];
             };
           };
           root = {
-            name = "root";
-            size = "20G";
+            size = "100%";
             content = {
-              type = "filesystem";
-              format = "btrfs";
-              mountpoint = "/";
-            };
-          };
-          persistent = {
-            name = "persistent";
-            size = "100%FREE";
-            content = {
-              type = "filesystem";
-              format = "btrfs";
-              mountpoint = "/persistent";
+              type = "btrfs";
+              subvolumes = {
+                "@root" = {
+                  mountpoint = "/";
+                };
+                "@persist" = {
+                  mountpoint = "/persist";
+                };
+                "@swap" = {
+                  mountpoint = "/.swapvol";
+                  swap = {
+                    swapfile.size = "4G";
+                  };
+                };
+              };
             };
           };
         };
