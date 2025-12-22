@@ -41,6 +41,7 @@
                 };
               };
             };
+            mountpoint = "/btrfs-root";
           };
         };
       };
