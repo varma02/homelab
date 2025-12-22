@@ -26,6 +26,7 @@
             size = "100%";
             content = {
               type = "btrfs";
+              extraArgs = [ "-f" ];
               subvolumes = {
                 "@rootfs" = {
                   mountpoint = "/";
@@ -33,15 +34,8 @@
                 "@persist" = {
                   mountpoint = "/persist";
                 };
-                "@swap" = {
-                  mountpoint = "/.swapvol";
-                  swap = {
-                    swapfile.size = "4G";
-                  };
-                };
               };
             };
-            mountpoint = "/btrfs-root";
           };
         };
       };
