@@ -3,7 +3,7 @@
 {
   imports = [ 
     ../../modules/base.nix
-    ./disko-config.nix
+    ./disko.nix
   ];
 
   networking.hostName = "vps1";
