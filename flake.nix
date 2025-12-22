@@ -18,7 +18,6 @@
     nixosConfigurations = {
       vps1 = mkNixos {
         specialArgs = { inherit inputs vars; };
-        system = "x86_64-linux";
         modules = [
           disko.nixosModules.disko
           ./machines/vps1/configuration.nix
