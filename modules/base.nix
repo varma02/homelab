@@ -13,6 +13,7 @@
       vars.sshPublicKey
     ];
     shell = pkgs.zsh;
+    password = "1234"; # TODO: REMOVE FOR PROD
   };
   
   # --- SSH ---
@@ -22,15 +23,15 @@
       PermitRootLogin = "no";
       PasswordAuthentication = false;
     };
-    openFirewall = true;
+    # openFirewall = true;
   };
 
   # --- FIREWALL ---
-  # networking.firewall = {
-  #   enable = true;
+  networking.firewall = {
+    enable = false;
   #   allowedTCPPorts = [ ];
   #   allowedUDPPorts = [ ];
-  # };
+  };
 
   # --- SYSTEM ---
   nix = {
