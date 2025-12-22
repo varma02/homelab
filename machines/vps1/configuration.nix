@@ -8,11 +8,5 @@
   ];
 
   networking.hostName = "vps1";
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ ];
-    allowedUDPPorts = [ ];
-  };
-
 }
 

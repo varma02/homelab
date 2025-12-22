@@ -25,6 +25,13 @@
     openFirewall = true;
   };
 
+  # --- FIREWALL ---
+  # networking.firewall = {
+  #   enable = true;
+  #   allowedTCPPorts = [ ];
+  #   allowedUDPPorts = [ ];
+  # };
+
   # --- SYSTEM ---
   nix = {
     gc = {
