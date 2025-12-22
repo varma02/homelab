@@ -1,5 +1,5 @@
 
-{ inputs, pkgs, ... }:
+{ inputs, lib, pkgs, ... }:
 {
   imports = [ 
     ../../modules/base.nix

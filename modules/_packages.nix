@@ -1,10 +1,12 @@
-{pkgs, ...}: {
+{ pkgs, ... }: 
+{
   environment.systemPackages = with pkgs; [
-    efibootmgr
     git
     parted
     vim
+    curl
   ];
+  
   programs.zsh = {
     enable = true;
     ohMyZsh = {
