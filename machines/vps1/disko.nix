@@ -24,11 +24,10 @@
           };
           root = {
             size = "100%";
-            extraArgs = [ "-f" ];
             content = {
               type = "btrfs";
               subvolumes = {
-                "@root" = {
+                "@rootfs" = {
                   mountpoint = "/";
                 };
                 "@persist" = {
