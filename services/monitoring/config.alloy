@@ -1,12 +1,21 @@
 prometheus.exporter.unix "host" {
   procfs_path = "/host/proc"
   sysfs_path  = "/host/sys"
-  rootfs_path = "/host/root"  
+  rootfs_path = "/host/root"
   disable_collectors = ["ipvs", "infiniband", "xfs", "zfs"]
 }
 
-prometheus.scrape "host_scraper" {
-  targets    = prometheus.exporter.unix.host.targets
+prometheus.exporter.cadvisor "docker" {
+  docker_host = "unix:///var/run/docker.sock"
+  disabled_metrics = ["disk", "udp"]
+  storage_duration = "5m" 
+}
+
+prometheus.scrape "metrics_scraper" {
+  targets = concat(
+    prometheus.exporter.unix.host.targets,
+    prometheus.exporter.cadvisor.docker.targets
+  )
   forward_to = [prometheus.remote_write.local.receiver]
 }
 

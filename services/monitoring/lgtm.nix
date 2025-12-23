@@ -29,14 +29,15 @@
       # --- Alloy ---
       alloy = {
         image = "grafana/alloy:latest";
+        user = "root";
         volumes = [
+          "/var/run/docker.sock:/var/run/docker.sock:ro"
           "${./config.alloy}:/etc/alloy/config.alloy:ro"
           "/proc:/host/proc:ro"
           "/sys:/host/sys:ro"
           "/:/host/root:ro"
         ];
         networks = [ "monitoring" ];
-        privileged = true;
         cmd = [
           "run"
           "--server.http.listen-addr=0.0.0.0:12345"
