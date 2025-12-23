@@ -36,7 +36,7 @@
           "/:/host/root:ro"
         ];
         networks = [ "monitoring" ];
-        # priviliged = true;
+        privileged = true;
         cmd = [
           "run"
           "--server.http.listen-addr=0.0.0.0:12345"
