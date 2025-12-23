@@ -35,11 +35,12 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 10d";
+      options = "--delete-older-than 15d";
     };
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
+      trusted-users = [ "@wheel" ];
     };
   };
   system.stateVersion = "25.11";
