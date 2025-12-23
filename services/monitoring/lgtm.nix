@@ -29,7 +29,7 @@
       # --- Alloy ---
       alloy = {
         image = "grafana/alloy:latest";
-        user = "root";
+        privilaged = true;
         volumes = [
           "/var/run/docker.sock:/var/run/docker.sock:ro"
           "${./config.alloy}:/etc/alloy/config.alloy:ro"
