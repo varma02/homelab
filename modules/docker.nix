@@ -1,5 +1,5 @@
 {
-  systemd.services.init-monitoring-network = {
+  systemd.services.docker-permissions-fix = {
     description = "Docker persist permission fix";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
