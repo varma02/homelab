@@ -1,0 +1,17 @@
+prometheus.exporter.unix "host" {
+  procfs_path = "/host/proc"
+  sysfs_path  = "/host/sys"
+  rootfs_path = "/host/root"  
+  disable_collectors = ["ipvs", "infiniband", "xfs", "zfs"]
+}
+
+prometheus.scrape "host_scraper" {
+  targets    = prometheus.exporter.unix.host.targets
+  forward_to = [prometheus.remote_write.local.receiver]
+}
+
+prometheus.remote_write "local" {
+  endpoint {
+    url = "http://prometheus:9090/api/v1/write"
+  }
+}

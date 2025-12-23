@@ -1,15 +1,3 @@
 global:
-  scrape_interval: 10s
-
-scrape_configs:
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-
-  - job_name: 'loki'
-    static_configs:
-      - targets: ['loki:3100']
-
-  - job_name: 'tempo'
-    static_configs:
-      - targets: ['tempo:3200']
+  scrape_interval: 30s
+scrape_configs: []
