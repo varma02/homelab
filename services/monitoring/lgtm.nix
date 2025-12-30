@@ -32,6 +32,7 @@
         image = "grafana/alloy:v1.12.1";
         volumes = [
           "${./config.alloy}:/etc/alloy/config.alloy:ro"
+          "/persist/monitoring/alloy:/var/lib/alloy/data"
           "/var/run/docker.sock:/var/run/docker.sock:ro"
           "/proc:/host/proc:ro"
           "/sys:/host/sys:ro"

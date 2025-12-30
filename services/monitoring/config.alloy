@@ -84,3 +84,8 @@ loki.write "local_loki" {
 otelcol.exporter.loki "local_loki" {
   forward_to = [loki.write.local_loki.receiver]
 }
+
+logging {
+  level = "info"
+  format = "logfmt"
+}
