@@ -1,26 +1,94 @@
+// ==============================================================================
+// 1. RECEIVERS (Input)
+// ==============================================================================
+
+// A. OTLP Receiver (Gateway for external devices via Traefik)
+otelcol.receiver.otlp "default" {
+  grpc { endpoint = "0.0.0.0:4317" }
+  http { endpoint = "0.0.0.0:4318" }
+  
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+    logs    = [otelcol.processor.batch.default.input]
+    traces  = [otelcol.processor.batch.default.input]
+  }
+}
+
+// B. Host Metrics (NixOS System Stats)
 prometheus.exporter.unix "host" {
   procfs_path = "/host/proc"
   sysfs_path  = "/host/sys"
   rootfs_path = "/host/root"
-  disable_collectors = ["ipvs", "infiniband", "xfs", "zfs"]
 }
 
-prometheus.exporter.cadvisor "docker" {
-  docker_host = "unix:///var/run/docker.sock"
-  disabled_metrics = ["disk", "udp"]
-  storage_duration = "5m" 
+// Internal scraper to read the Unix exporter above
+prometheus.scrape "host_scraper" {
+  targets    = prometheus.exporter.unix.host.targets
+  forward_to = [prometheus.remote_write.local_prom.receiver]
 }
 
-prometheus.scrape "metrics_scraper" {
-  targets = concat(
-    prometheus.exporter.unix.host.targets,
-    prometheus.exporter.cadvisor.docker.targets
-  )
-  forward_to = [prometheus.remote_write.local.receiver]
+// C. Docker Logs
+discovery.docker "linux" {
+  host = "unix:///var/run/docker.sock"
 }
 
-prometheus.remote_write "local" {
+loki.source.docker "default" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.docker.linux.targets
+  labels     = {"job" = "docker"}
+  forward_to = [loki.write.local_loki.receiver]
+}
+
+// ==============================================================================
+// 2. PROCESSORS
+// ==============================================================================
+
+otelcol.processor.batch "default" {
+  output {
+    // Route signals to their respective converters/exporters
+    metrics = [otelcol.exporter.prometheus.to_remote_write.input]
+    logs    = [otelcol.exporter.loki.local_loki.input]
+    traces  = [otelcol.exporter.otlp.local_tempo.input]
+  }
+}
+
+// ==============================================================================
+// 3. EXPORTERS (Output)
+// ==============================================================================
+
+// --- TARGET 1: PROMETHEUS (Metrics) ---
+// We use remote_write so Alloy pushes to Prometheus.
+// NOTE: Ensure Prometheus is started with '--web.enable-remote-write-receiver'
+prometheus.remote_write "local_prom" {
   endpoint {
     url = "http://prometheus:9090/api/v1/write"
+  }
+}
+
+// Bridge: Converts OTLP metrics (from receiver) to Prometheus format
+otelcol.exporter.prometheus "to_remote_write" {
+  forward_to = [prometheus.remote_write.local_prom.receiver]
+}
+
+// --- TARGET 2: LOKI (Logs) ---
+loki.write "local_loki" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+
+// Bridge: Converts OTLP logs (from receiver) to Loki format
+otelcol.exporter.loki "local_loki" {
+  forward_to = [loki.write.local_loki.receiver]
+}
+
+// --- TARGET 3: TEMPO (Traces) ---
+// Sends OTLP traces directly to Tempo
+otelcol.exporter.otlp "local_tempo" {
+  client {
+    endpoint = "tempo:4317"
+    tls {
+      insecure = true
+    }
   }
 }

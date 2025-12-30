@@ -3,7 +3,8 @@
 {
   systemd.services.init-monitoring-network = {
     description = "Create docker network for monitoring stack";
-    after = [ "network.target" ];
+    after = [ "docker.service" ];
+    requires = [ "docker.service" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig.Type = "oneshot";
     script = ''
@@ -17,7 +18,7 @@
     containers = {
       # --- Grafana ---
       grafana = {
-        image = "grafana/grafana:latest";
+        image = "grafana/grafana:12.3";
         volumes = [
           "/persist/monitoring/grafana:/var/lib/grafana"
           "${./datasources.yaml}:/etc/grafana/provisioning/datasources/datasources.yaml:ro"
@@ -28,58 +29,49 @@
       };
       # --- Alloy ---
       alloy = {
-        image = "grafana/alloy:latest";
-        privileged = true;
+        image = "grafana/alloy:v1.12.1";
         volumes = [
-          "/var/run/docker.sock:/var/run/docker.sock:ro"
           "${./config.alloy}:/etc/alloy/config.alloy:ro"
+          "/var/run/docker.sock:/var/run/docker.sock:ro"
           "/proc:/host/proc:ro"
           "/sys:/host/sys:ro"
           "/:/host/root:ro"
         ];
         networks = [ "monitoring" ];
+        extraOptions = [
+          "--privileged"
+          "--pid=host"
+        ];
         cmd = [
           "run"
-          "--server.http.listen-addr=0.0.0.0:12345"
+          "--server.http.listen-addr=0.0.0.0:4319"
           "--storage.path=/var/lib/alloy/data"
           "/etc/alloy/config.alloy"
         ];
       };
       # --- Prometheus ---
       prometheus = {
-        image = "prom/prometheus:latest";
+        image = "prom/prometheus:v3.8.1";
         volumes = [
           "${./prometheus.yaml}:/etc/prometheus/prometheus.yml:ro"
           "/persist/monitoring/prometheus:/prometheus"
         ];
         networks = [ "monitoring" ];
         cmd = [ 
-          "--config.file=/etc/prometheus/prometheus.yml" 
-          "--storage.tsdb.path=/prometheus" 
-          "--web.console.libraries=/usr/share/prometheus/console_libraries"
-          "--web.console.templates=/usr/share/prometheus/consoles"
+          "--config.file=/etc/prometheus/prometheus.yml"
+          "--storage.tsdb.path=/prometheus"
           "--web.enable-remote-write-receiver"
         ];
       };
       # --- Loki ---
       loki = {
-        image = "grafana/loki:latest";
+        image = "grafana/loki:3.6";
         volumes = [
           "${./loki.yaml}:/etc/loki/local-config.yaml:ro"
           "/persist/monitoring/loki:/tmp/loki"
         ];
         networks = [ "monitoring" ];
         cmd = [ "-config.file=/etc/loki/local-config.yaml" ];
-      };
-      # --- Tempo ---
-      tempo = {
-        image = "grafana/tempo:latest";
-        volumes = [
-          "${./tempo.yaml}:/etc/tempo.yaml"
-          "/persist/monitoring/tempo:/tmp/tempo"
-        ];
-        networks = [ "monitoring" ];
-        cmd = [ "-config.file=/etc/tempo.yaml" ];
       };
     };
   };
