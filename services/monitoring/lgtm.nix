@@ -41,12 +41,13 @@
           "/etc/machine-id:/etc/machine-id:ro"
           "/var/lib/docker/:/var/lib/docker:ro"
           "/dev/disk/:/dev/disk:ro"
+          "/run/udev:/run/udev:ro"
         ];
         networks = [ "monitoring" ];
         dependsOn = [ "prometheus" "loki" ];
         extraOptions = [
           "--privileged"
-          "--pid=host"
+          "--user=root"
         ];
         cmd = [
           "run"
