@@ -24,8 +24,8 @@
           "${./datasources.yaml}:/etc/grafana/provisioning/datasources/datasources.yaml:ro"
         ];
         networks = [ "monitoring" ];
+        dependsOn = [ "prometheus" "loki" ];
         ports = [ "80:3000" ];
-        dependsOn = [ "prometheus" "loki" "tempo" ];
       };
       # --- Alloy ---
       alloy = {
@@ -38,6 +38,7 @@
           "/:/host/root:ro"
         ];
         networks = [ "monitoring" ];
+        dependsOn = [ "prometheus" "loki" ];
         extraOptions = [
           "--privileged"
           "--pid=host"
