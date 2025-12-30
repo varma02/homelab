@@ -36,6 +36,10 @@
           "/proc:/host/proc:ro"
           "/sys:/host/sys:ro"
           "/:/host/root:ro"
+          "/var/log/journal:/var/log/journal:ro"
+          "/etc/machine-id:/etc/machine-id:ro"
+          "/var/lib/docker/:/var/lib/docker:ro"
+          "/dev/disk/:/dev/disk:ro"
         ];
         networks = [ "monitoring" ];
         dependsOn = [ "prometheus" "loki" ];

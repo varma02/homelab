@@ -1,8 +1,4 @@
-// ==============================================================================
-// 1. RECEIVERS (Input)
-// ==============================================================================
-
-// A. OTLP Receiver (Gateway for external devices via Traefik)
+// OTLP receiver for external telemetry
 otelcol.receiver.otlp "default" {
   grpc { endpoint = "0.0.0.0:4317" }
   http { endpoint = "0.0.0.0:4318" }
@@ -10,85 +6,81 @@ otelcol.receiver.otlp "default" {
   output {
     metrics = [otelcol.processor.batch.default.input]
     logs    = [otelcol.processor.batch.default.input]
-    traces  = [otelcol.processor.batch.default.input]
   }
 }
 
-// B. Host Metrics (NixOS System Stats)
+// Host system metrics
 prometheus.exporter.unix "host" {
   procfs_path = "/host/proc"
   sysfs_path  = "/host/sys"
   rootfs_path = "/host/root"
+  enable_collectors = ["cpu", "loadavg", "meminfo", "netdev", "filesystem"]
 }
 
-// Internal scraper to read the Unix exporter above
-prometheus.scrape "host_scraper" {
-  targets    = prometheus.exporter.unix.host.targets
-  forward_to = [prometheus.remote_write.local_prom.receiver]
-}
-
-// C. Docker Logs
-discovery.docker "linux" {
-  host = "unix:///var/run/docker.sock"
-}
-
-loki.source.docker "default" {
-  host       = "unix:///var/run/docker.sock"
-  targets    = discovery.docker.linux.targets
-  labels     = {"job" = "docker"}
+// Systemd journal logs
+loki.source.journal "read" {
+  path    = "/var/log/journal"
+  labels  = {component = "system_logs"}
   forward_to = [loki.write.local_loki.receiver]
 }
 
-// ==============================================================================
-// 2. PROCESSORS
-// ==============================================================================
+// Docker logs
+discovery.docker "linux" {
+  host = "unix:///var/run/docker.sock"
+}
+discovery.relabel "docker_labels" {
+  targets = discovery.docker.linux.targets
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    target_label  = "container"
+  }
+  rule {
+    source_labels = ["__meta_docker_container_image"]
+    target_label  = "image"
+  }
+}
+loki.source.docker "default" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.docker_labels.output
+  labels     = {"source" = "docker"}
+  forward_to = [loki.write.local_loki.receiver]
+}
+
+// Docker metrics via cAdvisor
+prometheus.exporter.cadvisor "docker_metrics" {
+  docker_host = "unix:///var/run/docker.sock"
+  storage_duration = "2m"
+}
+
+prometheus.scrape "metrics_scraper" {
+  targets = concat(
+    prometheus.exporter.unix.host.targets,
+    prometheus.exporter.cadvisor.docker_metrics.targets
+  )
+  forward_to = [prometheus.remote_write.local_prom.receiver]
+}
 
 otelcol.processor.batch "default" {
   output {
-    // Route signals to their respective converters/exporters
     metrics = [otelcol.exporter.prometheus.to_remote_write.input]
     logs    = [otelcol.exporter.loki.local_loki.input]
-    traces  = [otelcol.exporter.otlp.local_tempo.input]
   }
 }
 
-// ==============================================================================
-// 3. EXPORTERS (Output)
-// ==============================================================================
-
-// --- TARGET 1: PROMETHEUS (Metrics) ---
-// We use remote_write so Alloy pushes to Prometheus.
-// NOTE: Ensure Prometheus is started with '--web.enable-remote-write-receiver'
+// Exporters to local Prometheus and Loki instances
 prometheus.remote_write "local_prom" {
   endpoint {
     url = "http://prometheus:9090/api/v1/write"
   }
 }
-
-// Bridge: Converts OTLP metrics (from receiver) to Prometheus format
 otelcol.exporter.prometheus "to_remote_write" {
   forward_to = [prometheus.remote_write.local_prom.receiver]
 }
-
-// --- TARGET 2: LOKI (Logs) ---
 loki.write "local_loki" {
   endpoint {
     url = "http://loki:3100/loki/api/v1/push"
   }
 }
-
-// Bridge: Converts OTLP logs (from receiver) to Loki format
 otelcol.exporter.loki "local_loki" {
   forward_to = [loki.write.local_loki.receiver]
-}
-
-// --- TARGET 3: TEMPO (Traces) ---
-// Sends OTLP traces directly to Tempo
-otelcol.exporter.otlp "local_tempo" {
-  client {
-    endpoint = "tempo:4317"
-    tls {
-      insecure = true
-    }
-  }
 }
