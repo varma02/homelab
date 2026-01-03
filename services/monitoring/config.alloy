@@ -1,84 +1,67 @@
-// OTLP receiver for external telemetry
-otelcol.receiver.otlp "default" {
-  grpc { endpoint = "0.0.0.0:4317" }
-  http { endpoint = "0.0.0.0:4318" }
-  
-  output {
-    metrics = [otelcol.processor.batch.default.input]
-    logs    = [otelcol.processor.batch.default.input]
+// disable internal telemetry
+otelcol.exporter.otlp "tempo" {
+  client {
+    endpoint = "localhost:4317"
+    tls {
+      insecure = true
+    }
   }
 }
 
-// Host system metrics
-prometheus.exporter.unix "host" {
-  procfs_path = "/host/proc"
-  sysfs_path  = "/host/sys"
-  rootfs_path = "/host/root"
-  enable_collectors = ["cpu", "loadavg", "meminfo", "netdev", "filesystem"]
-}
+// -- Endpoints -- //
 
-// Docker logs
-discovery.docker "linux" {
-  host = "unix:///var/run/docker.sock"
-}
-discovery.relabel "docker_labels" {
-  targets = discovery.docker.linux.targets
-  rule {
-    source_labels = ["__meta_docker_container_name"]
-    target_label  = "container"
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+    batch_wait = "5s"
+    batch_size = "1MiB"
   }
-  rule {
-    source_labels = ["__meta_docker_container_image"]
-    target_label  = "image"
-  }
-}
-loki.source.docker "default" {
-  host       = "unix:///var/run/docker.sock"
-  targets    = discovery.relabel.docker_labels.output
-  labels     = {"source" = "docker"}
-  forward_to = [loki.write.local_loki.receiver]
+  external_labels = {}
 }
 
-// Docker metrics via cAdvisor
-prometheus.exporter.cadvisor "docker_metrics" {
-  docker_host = "unix:///var/run/docker.sock"
-  storage_duration = "2m"
-}
-
-prometheus.scrape "metrics_scraper" {
-  targets = concat(
-    prometheus.exporter.unix.host.targets,
-    prometheus.exporter.cadvisor.docker_metrics.targets,
-  )
-  forward_to = [prometheus.remote_write.local_prom.receiver]
-}
-
-otelcol.processor.batch "default" {
-  output {
-    metrics = [otelcol.exporter.prometheus.to_remote_write.input]
-    logs    = [otelcol.exporter.loki.local_loki.input]
-  }
-}
-
-// Exporters to local Prometheus and Loki instances
-prometheus.remote_write "local_prom" {
+prometheus.remote_write "default" {
   endpoint {
     url = "http://prometheus:9090/api/v1/write"
   }
 }
-otelcol.exporter.prometheus "to_remote_write" {
-  forward_to = [prometheus.remote_write.local_prom.receiver]
-}
-loki.write "local_loki" {
-  endpoint {
-    url = "http://loki:3100/loki/api/v1/push"
+
+// -- System metrics -- //
+
+discovery.relabel "sys_metrics" {
+  targets = prometheus.exporter.unix.sys_metrics.targets
+  rule {
+    target_label = "instance"
+    replacement  = sys.env("SYSTEM_HOSTNAME")
+  }
+  rule {
+    target_label = "job"
+    replacement = string.format("%s-metrics", sys.env("SYSTEM_HOSTNAME"))
   }
 }
-otelcol.exporter.loki "local_loki" {
-  forward_to = [loki.write.local_loki.receiver]
+
+prometheus.exporter.unix "sys_metrics" {
+  set_collectors = [ "btrfs", "cpu", "cpufreq", "meminfo", "diskstats", "filesystem", "netstat", "netclass", "netdev", "os", "stat", "time", ]
+
+  rootfs_path = "/host/root"
+  procfs_path = "/host/proc"
+  sysfs_path  = "/host/sys"
+  udev_data_path  = "/host/run/udev/data"
+
+  filesystem {
+    fs_types_exclude     = "^(autofs|binfmt_misc|bpf|cgroup2?|configfs|debugfs|devpts|devtmpfs|tmpfs|fusectl|hugetlbfs|iso9660|mqueue|nsfs|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|selinuxfs|squashfs|sysfs|tracefs)$"
+    mount_points_exclude = "^/(dev|proc|run/credentials/.+|sys|var/lib/docker/.+)($|/)"
+    mount_timeout        = "5s"
+  }
+  netclass {
+    ignored_devices = "^(veth.*|cali.*|[a-f0-9]{15})$"
+  }
+  netdev {
+    device_exclude = "^(veth.*|cali.*|[a-f0-9]{15})$"
+  }
 }
 
-logging {
-  level = "info"
-  format = "logfmt"
+prometheus.scrape "sys_metrics" {
+  scrape_interval = "10s"
+  targets    = discovery.relabel.sys_metrics.output
+  forward_to = [prometheus.remote_write.default.receiver]
 }

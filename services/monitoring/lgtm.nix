@@ -32,29 +32,29 @@
         image = "grafana/alloy:v1.12.1";
         volumes = [
           "${./config.alloy}:/etc/alloy/config.alloy:ro"
-          "/persist/monitoring/alloy:/var/lib/alloy/data"
-          "/var/run/docker.sock:/var/run/docker.sock:ro"
+          "/persist/monitoring/alloy:/alloy/data"
+          # Required for node exporter metrics
+          "/:/host/root:ro"
           "/proc:/host/proc:ro"
           "/sys:/host/sys:ro"
-          "/:/host/root:ro"
-          "/var/log/journal:/var/log/journal:ro"
-          "/etc/machine-id:/etc/machine-id:ro"
-          "/var/lib/docker/:/var/lib/docker:ro"
-          "/dev/disk/:/dev/disk:ro"
-          "/run/udev:/run/udev:ro"
+          "/run/udev/data:/host/run/udev/data:ro"
         ];
+        environment = {
+          SYSTEM_HOSTNAME = config.networking.hostName;
+        };
+        ports = [ "12345:12345" ];
         networks = [ "monitoring" ];
         dependsOn = [ "prometheus" "loki" ];
-        extraOptions = [
-          "--privileged"
-          "--user=root"
-        ];
-        cmd = [
-          "run"
-          "--server.http.listen-addr=0.0.0.0:4319"
-          "--storage.path=/var/lib/alloy/data"
-          "/etc/alloy/config.alloy"
-        ];
+
+        # extraOptions = [
+        #   "--privileged"
+        #   "--user=root"
+        # ];
+        # cmd = [
+        #   "run"
+        #   "--storage.path=/var/lib/alloy/data"
+        #   "/etc/alloy/config.alloy"
+        # ];
       };
       # --- Prometheus ---
       prometheus = {
