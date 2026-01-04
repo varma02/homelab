@@ -50,11 +50,12 @@
         #   "--privileged"
         #   "--user=root"
         # ];
-        # cmd = [
-        #   "run"
-        #   "--storage.path=/var/lib/alloy/data"
-        #   "/etc/alloy/config.alloy"
-        # ];
+        cmd = [
+          "run"
+          "--server.http.listen-addr=0.0.0.0:12345"
+          "--storage.path=/var/lib/alloy/data"
+          "/etc/alloy/config.alloy"
+        ];
       };
       # --- Prometheus ---
       prometheus = {
