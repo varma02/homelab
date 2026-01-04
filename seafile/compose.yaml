@@ -102,3 +102,5 @@ networks:
   internal:
     driver: bridge
     internal: true
+  traefik:
+    external: true
