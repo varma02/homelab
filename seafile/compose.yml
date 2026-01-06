@@ -7,9 +7,9 @@ services:
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
     volumes:
-      - "${SEAFILE_MYSQL_VOLUME:-/data/mysql}:/var/lib/mysql"
+      - "${SEAFILE_MYSQL_VOLUME:-/opt/seafile-mysql/db}:/var/lib/mysql"
     networks:
-      - internal
+      - seafile-net
     healthcheck:
       test:
         [
@@ -25,7 +25,7 @@ services:
       retries: 10
 
   redis:
-    image: ${SEAFILE_REDIS_IMAGE:-redis:8.4}
+    image: ${SEAFILE_REDIS_IMAGE:-redis}
     restart: unless-stopped
     command:
       - /bin/sh
@@ -34,13 +34,15 @@ services:
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-}
     networks:
-      - internal
+      - seafile-net
 
   seafile:
     image: ${SEAFILE_IMAGE:-seafileltd/seafile-mc:13.0-latest}
     restart: unless-stopped
+    # ports:
+    #   - "80:80"
     volumes:
-      - ${SEAFILE_VOLUME:-./data/seafile}:/shared
+      - ${SEAFILE_VOLUME:-/opt/seafile-data}:/shared
     environment:
       - SEAFILE_MYSQL_DB_HOST=${SEAFILE_MYSQL_DB_HOST:-db}
       - SEAFILE_MYSQL_DB_PORT=${SEAFILE_MYSQL_DB_PORT:-3306}
@@ -75,18 +77,14 @@ services:
       - SEAFILE_AI_SERVER_URL=${SEAFILE_AI_SERVER_URL:-http://seafile-ai:8888}
       - SEAFILE_AI_SECRET_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - MD_FILE_COUNT_LIMIT=${MD_FILE_COUNT_LIMIT:-100000}
-    ports:
-      - 30080:80
-      - 30081:443
-      - 30082:8000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.seafile.rule=Host(`${SEAFILE_SERVER_HOSTNAME}`)"
-      # - "traefik.http.services.seafile.loadbalancer.server.port=8000"
+      - "traefik.http.services.seafile.loadbalancer.server.port=80"
       - "traefik.http.routers.seafile.entrypoints=websecure"
-      - "traefik.http.routers.seafile.tls.certresolver=cf"
       - "traefik.http.routers.seafile.tls=true"
-      - "traefik.http.routers.seafile.middlewares=tailnet-whitelist@file"
+      - "traefik.http.routers.seafile.tls.certresolver=cf"
+      - "traefik.http.routers.seafile.middlewares=tailnet-whitelist@file,authelia@file"
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:80 || exit 1"]
       interval: 30s
@@ -99,12 +97,11 @@ services:
       redis:
         condition: service_started
     networks:
-      - internal
       - traefik
+      - seafile-net
 
 networks:
-  internal:
-    driver: bridge
-    internal: true
+  seafile-net:
+    name: seafile-net
   traefik:
     external: true
