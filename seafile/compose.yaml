@@ -75,10 +75,14 @@ services:
       - SEAFILE_AI_SERVER_URL=${SEAFILE_AI_SERVER_URL:-http://seafile-ai:8888}
       - SEAFILE_AI_SECRET_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - MD_FILE_COUNT_LIMIT=${MD_FILE_COUNT_LIMIT:-100000}
+    ports:
+      - 30080:80
+      - 30081:443
+      - 30082:8000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.seafile.rule=Host(`${SEAFILE_SERVER_HOSTNAME}`)"
-      - "traefik.http.services.seafile.loadbalancer.server.port=8000"
+      # - "traefik.http.services.seafile.loadbalancer.server.port=8000"
       - "traefik.http.routers.seafile.entrypoints=websecure"
       - "traefik.http.routers.seafile.tls.certresolver=cf"
       - "traefik.http.routers.seafile.tls=true"
