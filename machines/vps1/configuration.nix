@@ -11,7 +11,7 @@
   ];
 
   networking.hostName = "vps1";
-  networking.firewall.allowedTCPPorts = [ 80 443 12345 ];
-  networking.firewall.allowedUDPPorts = [ 443 ];
+  # networking.firewall.allowedTCPPorts = [ 80 443 ];
+  # networking.firewall.allowedUDPPorts = [ 443 ];
 }
 
