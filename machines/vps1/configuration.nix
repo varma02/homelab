@@ -5,9 +5,8 @@
     ./hardware.nix
     ../../modules/boot/grub.nix
     ../../modules/base.nix
-
     ../../modules/docker.nix
-    ../../services/monitoring/lgtm.nix
+    ../../services/netdata.nix
   ];
 
   networking.hostName = "vps1";
