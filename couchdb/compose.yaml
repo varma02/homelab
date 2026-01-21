@@ -1,0 +1,23 @@
+services:
+  couchdb:
+    image: couchdb:3.5
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ${COUCHDB_DATA_VOLUME}:/opt/couchdb/data
+      - ${COUCHDB_ETC_VOLUME}:/opt/couchdb/etc/local.d
+    # ports:
+    #   - 5984:5984
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.couchdb.rule=Host(`${COUCHDB_HOST}`)"
+      - "traefik.http.services.couchdb.loadbalancer.server.port=5984"
+      - "traefik.http.routers.couchdb.entrypoints=websecure"
+      - "traefik.http.routers.couchdb.tls=true"
+      - "traefik.http.routers.couchdb.tls.certresolver=cf"
+
+networks:
+  traefik:
+    external: true
