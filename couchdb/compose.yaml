@@ -1,6 +1,7 @@
 services:
   couchdb:
     image: couchdb:3.5
+    user: 5984:5984
     restart: unless-stopped
     env_file: .env
     volumes:
