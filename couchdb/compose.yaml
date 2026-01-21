@@ -6,9 +6,6 @@ services:
     env_file: .env
     volumes:
       - ${COUCHDB_DATA_VOLUME}:/opt/couchdb/data
-      - ${COUCHDB_ETC_VOLUME}:/opt/couchdb/etc/local.d
-    # ports:
-    #   - 5984:5984
     networks:
       - traefik
     labels:
