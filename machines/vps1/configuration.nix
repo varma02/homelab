@@ -6,7 +6,9 @@
     ../../modules/boot/grub.nix
     ../../modules/base.nix
     ../../modules/docker.nix
-    ../../services/netdata.nix
+
+    ../../services/tailscale.nix
+    ../../services/traefik/traefik.nix
   ];
 
   networking.hostName = "vps1";

@@ -1,19 +1,11 @@
-{ config, ... }: {
-  sops.secrets."tailscale-authkey" = {};
-
+{ config, ... }:
+{
   services.tailscale = {
     enable = true;
     openFirewall = true;
-    authKeyFile = config.sops.secrets."tailscale-authkey".path;
+    authKeyFile = "/persist/tailscale/authkey";
     useRoutingFeatures = "server";
-    extraUpFlags = [
-      "--advertise-routes=10.0.0.0/8"
-    ];
-  };
-
-  environment.persistence."/nix/persist" = {
-    directories = [
-      "/var/lib/tailscale"
-    ];
+    extraUpFlags = [ "--accept-dns=false" "--advertise-exit-node" "--accept-routes" ];
+    extraDaemonFlags = [ "--statedir=/persist/tailscale/state" ];
   };
 }

@@ -24,7 +24,7 @@
       PermitRootLogin = "no";
       PasswordAuthentication = false;
     };
-    openFirewall = true;
+    # openFirewall = true;
   };
 
   # --- FIREWALL ---
@@ -40,7 +40,7 @@
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
-      trusted-users = [ "@wheel" ];
+      trusted-users = [ "${vars.userName}" ];
     };
   };
   system.stateVersion = "25.11";
