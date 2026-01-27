@@ -8,7 +8,7 @@ services:
       TS_STATE_DIR: /var/lib/tailscale
       TS_EXTRA_ARGS: --advertise-exit-node
     volumes:
-      - ../data/tailscale/state:/var/lib/tailscale
+      - ${TAILSCALE_STATE_VOLUME}:/var/lib/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     network_mode: host
