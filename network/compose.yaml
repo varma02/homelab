@@ -3,10 +3,10 @@ services:
     image: ghcr.io/tailscale/tailscale:latest
     restart: unless-stopped
     environment:
-      - TS_HOSTNAME=${TAILSCALE_HOSTNAME}
-      - TS_AUTHKEY=${TAILSCALE_AUTHKEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_EXTRA_ARGS="--advertise-exit-node"
+      TS_HOSTNAME: ${TAILSCALE_HOSTNAME}
+      TS_AUTHKEY: ${TAILSCALE_AUTHKEY}
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_EXTRA_ARGS: --advertise-exit-node
     volumes:
       - ../data/tailscale/state:/var/lib/tailscale
     devices:
