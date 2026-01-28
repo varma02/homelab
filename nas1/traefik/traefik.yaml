@@ -32,13 +32,13 @@ certificatesResolvers:
   letsencrypt:
     acme:
       email: "acme@varma01.dev"
-      storage: "/acme/letsencrypt.json"
+      storage: "/app/acme/letsencrypt.json"
       httpChallenge:
         entryPoint: web
   cloudflare:
     acme:
       email: "acme@varma01.dev"
-      storage: "/acme/cloudflare.json"
+      storage: "/app/acme/cloudflare.json"
       dnsChallenge:
         provider: cloudflare
         propagation:
