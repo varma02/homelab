@@ -1,0 +1,35 @@
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:v3.6
+    restart: unless-stopped
+    environment:
+      CLOUDFLARE_DNS_API_TOKEN: ${CLOUDFLARE_DNS_API_TOKEN:-}
+    networks:
+      - internet
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./traefik.yaml:/etc/traefik/traefik.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_acme:/app/acme
+      - traefik_logs:/app/logs
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.traefik.rule: Host(`traefik.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
+      traefik.http.routers.traefik.entrypoints: websecure
+      traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.traefik.tls.certresolver: cloudflare
+
+networks:
+  internet:
+    driver: bridge
+
+volumes:
+  traefik_acme:
+    name: traefik_acme
+    driver: local
+  traefik_logs:
+    name: traefik_logs
+    driver: local

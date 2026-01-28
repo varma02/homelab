@@ -1,0 +1,74 @@
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    watch: true
+    # network: traefik
+  # file:
+  #   directory: /app/dynamic
+
+api:
+  dashboard: true
+  insecure: false
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        options: default
+        certResolver: le
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "acme@varma01.dev"
+      storage: "/acme/letsencrypt.json"
+      httpChallenge:
+        entryPoint: web
+  cloudflare:
+    acme:
+      email: "acme@varma01.dev"
+      storage: "/acme/cloudflare.json"
+      dnsChallenge:
+        provider: cloudflare
+        propagation:
+          delayBeforeChecks: 10
+
+# ping: {}
+
+log:
+  level: WARN
+  format: json
+  maxSize: 50
+  maxAge: 720
+  filePath: "/app/logs/traefik.log"
+
+# accessLog:
+#   format: json
+#   filePath: "/logs/access.log"
+#   bufferingSize: 10
+#   fields:
+#     defaultMode: keep
+#     headers:
+#       defaultMode: keep
+#       names:
+#         Authorization: drop
+#         Set-Cookie: drop
+#         Cookie: drop
+#         WWW-Authenticate: drop
+#         Proxy-Authorization: drop
+#         Proxy-Authenticate: drop
+
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
