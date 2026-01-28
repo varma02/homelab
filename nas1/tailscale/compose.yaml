@@ -1,5 +1,6 @@
 services:
   tailscale:
+    container_name: tailscale
     image: ghcr.io/tailscale/tailscale:latest
     restart: unless-stopped
     environment:
