@@ -1,3 +1,6 @@
+include:
+  - ../traefik/networks.compose.yaml
+
 services:
   jellyfin:
     container_name: jellyfin
@@ -27,8 +30,6 @@ services:
 networks:
   internet:
     driver: bridge
-  traefik-jellyfin:
-    external: true
 
 # volumes:
 #   jellyfin_config:
