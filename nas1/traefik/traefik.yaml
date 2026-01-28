@@ -26,15 +26,9 @@ entryPoints:
     http:
       tls:
         options: default
-        certResolver: le
+        certResolver: cloudflare
 
 certificatesResolvers:
-  letsencrypt:
-    acme:
-      email: "acme@varma01.dev"
-      storage: "/app/acme/letsencrypt.json"
-      httpChallenge:
-        entryPoint: web
   cloudflare:
     acme:
       email: "acme@varma01.dev"

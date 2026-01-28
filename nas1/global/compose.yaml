@@ -1,0 +1,4 @@
+networks:
+  traefik-jellyfin:
+    name: traefik-jellyfin
+    internal: true

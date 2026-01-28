@@ -7,6 +7,7 @@ services:
       CF_DNS_API_TOKEN: ${CLOUDFLARE_DNS_API_TOKEN:?CLOUDFLARE_DNS_API_TOKEN variable not set}
     networks:
       - internet
+      - traefik-jellyfin
     ports:
       - 80:80
       - 443:443
@@ -25,6 +26,8 @@ services:
 networks:
   internet:
     driver: bridge
+  traefik-jellyfin:
+    external: true
 
 volumes:
   traefik_acme:
