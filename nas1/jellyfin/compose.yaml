@@ -10,8 +10,8 @@ services:
       TZ: Europe/Budapest
       JELLYFIN_PublishedServerUrl: https://jelly.${EXTERNAL_DOMAIN}
     volumes:
-      - /mnt/SigmaPool/jellyfin/config:/config
-      - /mnt/SigmaPool/jellyfin/cache:/cache
+      - jellyfin_config:/config
+      - jellyfin_cache:/cache
       - /mnt/SigmaPool/jellyfin/media:/media
       - /mnt/SigmaPool/torrent/downloads:/downloads:ro
     devices:
@@ -32,13 +32,13 @@ networks:
   internet:
     driver: bridge
 
-# volumes:
-#   jellyfin_config:
-#     name: jellyfin_config
-#     driver: local
-#   jellyfin_cache:
-#     name: jellyfin_cache
-#     driver: local
+volumes:
+  jellyfin_config:
+    name: jellyfin_config
+    driver: local
+  jellyfin_cache:
+    name: jellyfin_cache
+    driver: local
 #   jellyfin_media:
 #     name: jellyfin_media
 #     driver: local

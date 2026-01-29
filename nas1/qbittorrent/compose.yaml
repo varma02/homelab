@@ -1,3 +1,6 @@
+include:
+  - ../traefik/networks.compose.yaml
+
 services:
   qbittorrent:
     container_name: qbittorrent
