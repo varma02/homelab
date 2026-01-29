@@ -12,6 +12,7 @@ services:
       - internet
       - traefik-jellyfin
       - traefik-pihole
+      - traefik-qbittorrent
     ports:
       - 80:80
       - 443:443

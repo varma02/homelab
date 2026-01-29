@@ -1,0 +1,32 @@
+services:
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:5.1.2
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Budapest
+      WEBUI_PORT: 8080
+      TORRENTING_PORT: 46881
+    volumes:
+      - qbittorrent_config:/config
+      - /mnt/SigmaPool/torrent/downloads:/downloads
+    ports:
+      - 46881:46881
+    networks:
+      - traefik-qbittorrent
+      - internet
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik-qbittorrent
+      traefik.http.routers.qbittorrent.rule: Host(`qbittorrent.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
+      traefik.http.services.qbittorrent.loadbalancer.server.port: 8080
+      traefik.http.routers.qbittorrent.entrypoints: websecure
+
+networks:
+  internet:
+    driver: bridge
+
+volumes:
+  qbittorrent_config:
+    name: qbittorrent_config
+    driver: local
