@@ -2,3 +2,6 @@ networks:
   traefik-jellyfin:
     name: traefik-jellyfin
     internal: true
+  traefik-pihole:
+    name: traefik-pihole
+    internal: true

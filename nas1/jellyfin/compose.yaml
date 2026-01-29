@@ -7,8 +7,8 @@ services:
     image: ghcr.io/jellyfin/jellyfin:10.11
     restart: "unless-stopped"
     environment:
-      - TZ=Europe/Budapest
-      - JELLYFIN_PublishedServerUrl=https://jelly.${EXTERNAL_DOMAIN}
+      TZ: Europe/Budapest
+      JELLYFIN_PublishedServerUrl: https://jelly.${EXTERNAL_DOMAIN}
     volumes:
       - /mnt/SigmaPool/jellyfin/config:/config
       - /mnt/SigmaPool/jellyfin/cache:/cache
@@ -22,11 +22,11 @@ services:
       - traefik-jellyfin
       - internet
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik-jellyfin"
-      - "traefik.http.routers.jellyfin.rule=Host(`jelly.${EXTERNAL_DOMAIN}`)"
-      - "traefik.http.routers.jellyfin.entrypoints=websecure"
-      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      traefik.enable: true
+      traefik.docker.network: traefik-jellyfin
+      traefik.http.routers.jellyfin.rule: Host(`jelly.${EXTERNAL_DOMAIN}`)
+      traefik.http.routers.jellyfin.entrypoints: websecure
+      traefik.http.services.jellyfin.loadbalancer.server.port: 8096
 
 networks:
   internet:

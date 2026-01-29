@@ -11,6 +11,7 @@ services:
     networks:
       - internet
       - traefik-jellyfin
+      - traefik-pihole
     ports:
       - 80:80
       - 443:443
@@ -30,6 +31,8 @@ networks:
   internet:
     driver: bridge
   traefik-jellyfin:
+    external: true
+  traefik-pihole:
     external: true
 
 volumes:
