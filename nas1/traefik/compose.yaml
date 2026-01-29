@@ -29,6 +29,8 @@ services:
 networks:
   internet:
     driver: bridge
+  traefik-jellyfin:
+    external: true
 
 volumes:
   traefik_acme:
