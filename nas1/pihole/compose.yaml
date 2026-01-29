@@ -7,7 +7,8 @@ services:
     image: ghcr.io/pi-hole/pihole:2025.11.1
     restart: unless-stopped
     ports:
-      - "53:53"
+      - 53:53
+      - 53:53/udp
     environment:
       TZ: Europe/Budapest
       FTLCONF_dns_listeningMode: ALL
