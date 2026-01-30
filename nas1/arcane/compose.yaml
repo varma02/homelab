@@ -9,6 +9,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - arcane_data:/app/data
+      - /root/homelab:/app/homelab
     environment:
       APP_URL: https://arcane.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}
       ENCRYPTION_KEY: ${ARCANE_ENCRYPTION_KEY:?ARCANE_ENCRYPTION_KEY variable not set}
