@@ -13,6 +13,7 @@ services:
       - traefik-jellyfin
       - traefik-pihole
       - traefik-qbittorrent
+      - traefik-arcane
     ports:
       - 80:80
       - 443:443

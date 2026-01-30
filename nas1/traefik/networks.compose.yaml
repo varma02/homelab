@@ -8,3 +8,6 @@ networks:
   traefik-qbittorrent:
     name: traefik-qbittorrent
     internal: true
+  traefik-arcane:
+    name: traefik-arcane
+    internal: true

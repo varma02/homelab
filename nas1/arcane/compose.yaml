@@ -1,0 +1,32 @@
+include:
+  - ../traefik/networks.compose.yaml
+
+services:
+  arcane:
+    container_name: arcane
+    image: ghcr.io/getarcaneapp/arcane:v1.13
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - arcane_data:/app/data
+    environment:
+      APP_URL: https://arcane.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}
+      ENCRYPTION_KEY: ${ARCANE_ENCRYPTION_KEY:?ARCANE_ENCRYPTION_KEY variable not set}
+      JWT_SECRET: ${ARCANE_JWT_SECRET:?ARCANE_JWT_SECRET variable not set}
+      LOG_LEVEL: warn
+      LOG_JSON: false
+      OIDC_ENABLED: false
+      DATABASE_URL: file:data/arcane.db?_pragma=journal_mode(WAL)&_pragma=busy_timeout(2500)&_txlock=immediate
+    networks:
+      - traefik-arcane
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik-arcane
+      traefik.http.routers.arcane.rule: Host(`arcane.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
+      traefik.http.services.arcane.loadbalancer.server.port: 3552
+      traefik.http.routers.arcane.entrypoints: websecure
+
+volumes:
+  arcane_data:
+    name: arcane_data
+    driver: local
