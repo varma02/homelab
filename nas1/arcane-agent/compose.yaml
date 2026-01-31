@@ -1,3 +1,6 @@
+include:
+  - ../traefik/networks.compose.yaml
+
 services:
   arcane-agent:
     container_name: arcane-agent
