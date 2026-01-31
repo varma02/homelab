@@ -1,6 +1,6 @@
 include:
-  - env_file: ../common/common.env
-  - networks.compose.yaml
+  - path: networks.compose.yaml
+    env_file: ../common/common.env
 
 services:
   traefik:
