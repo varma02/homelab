@@ -1,5 +1,6 @@
 include:
   - networks.compose.yaml
+  - env_file: ../common/common.env
 
 services:
   traefik:
@@ -10,9 +11,6 @@ services:
       CF_DNS_API_TOKEN: ${CLOUDFLARE_DNS_API_TOKEN:?CLOUDFLARE_DNS_API_TOKEN variable not set}
     networks:
       - internet
-      - traefik-jellyfin
-      - traefik-pihole
-      - traefik-qbittorrent
       - traefik-arcane
     ports:
       - 80:80

@@ -1,0 +1,4 @@
+networks:
+  traefik-arcane:
+    name: traefik-arcane
+    internal: true

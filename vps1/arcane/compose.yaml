@@ -9,15 +9,25 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - arcane_data:/app/data
-      - /root/homelab:/app/homelab
     environment:
+      PORT: 3552
+      ENVIRONMENT: production
+      DOCKER_HOST: unix:///var/run/docker.sock
       APP_URL: https://arcane.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}
+      DATABASE_URL: file:data/arcane.db?_pragma=journal_mode(WAL)&_pragma=busy_timeout(2500)&_txlock=immediate
       ENCRYPTION_KEY: ${ARCANE_ENCRYPTION_KEY:?ARCANE_ENCRYPTION_KEY variable not set}
       JWT_SECRET: ${ARCANE_JWT_SECRET:?ARCANE_JWT_SECRET variable not set}
       LOG_LEVEL: warn
       LOG_JSON: false
       OIDC_ENABLED: false
-      DATABASE_URL: file:data/arcane.db?_pragma=journal_mode(WAL)&_pragma=busy_timeout(2500)&_txlock=immediate
+      AGENT_MODE: false
+      UPDATE_CHECK_DISABLED: true
+      ANALYTICS_DISABLED: true
+      UI_CONFIGURATION_DISABLED: true
+      AUTO_UPDATE: false
+      AUTH_LOCAL_ENABLED: true
+      AUTH_SESSION_TIMEOUT: 60
+      AUTH_PASSWORD_POLICY: strong
     networks:
       - traefik-arcane
     labels:
