@@ -1,0 +1,33 @@
+services:
+  arcane-agent:
+    container_name: arcane-agent
+    image: ghcr.io/getarcaneapp/arcane-headless:latest
+    restart: unless-stopped
+    environment:
+      PORT: 3552
+      ENVIRONMENT: production
+      DOCKER_HOST: unix:///var/run/docker.sock
+      AGENT_MODE: true
+      AGENT_TOKEN: ${ARCANE_AGENT_TOKEN:?ARCANE_AGENT_TOKEN variable not set}
+      MANAGER_API_URL: https://arcane.vps1.ts.varma01.dev
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - arcane-agent-data:/app/data
+    networks:
+      - internet
+      - traefik-arcane-agent
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik-arcane-agent
+      traefik.http.routers.arcane-agent.rule: Host(`arcane-agent.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
+      traefik.http.services.arcane-agent.loadbalancer.server.port: 3552
+      traefik.http.routers.arcane-agent.entrypoints: websecure
+
+networks:
+  internet:
+    driver: bridge
+
+volumes:
+  arcane-agent-data:
+    name: arcane-agent-data
+    driver: local

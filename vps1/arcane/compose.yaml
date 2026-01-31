@@ -30,12 +30,17 @@ services:
       AUTH_PASSWORD_POLICY: strong
     networks:
       - traefik-arcane
+      - internet
     labels:
       traefik.enable: true
       traefik.docker.network: traefik-arcane
       traefik.http.routers.arcane.rule: Host(`arcane.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
       traefik.http.services.arcane.loadbalancer.server.port: 3552
       traefik.http.routers.arcane.entrypoints: websecure
+
+networks:
+  internet:
+    driver: bridge
 
 volumes:
   arcane_data:
