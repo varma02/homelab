@@ -13,6 +13,8 @@ services:
       AGENT_MODE: true
       AGENT_TOKEN: ${ARCANE_AGENT_TOKEN:?ARCANE_AGENT_TOKEN variable not set}
       MANAGER_API_URL: https://arcane.vps1.ts.varma01.dev
+      UPDATE_CHECK_DISABLED: true
+      ANALYTICS_DISABLED: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - arcane-agent-data:/app/data
