@@ -11,3 +11,6 @@ networks:
   traefik-arcane-agent:
     name: traefik-arcane-agent
     internal: true
+  traefik-couchdb:
+    name: traefik-couchdb
+    internal: true

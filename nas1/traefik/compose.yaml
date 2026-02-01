@@ -14,6 +14,7 @@ services:
       - traefik-pihole
       - traefik-qbittorrent
       - traefik-arcane-agent
+      - traefik-couchdb
     ports:
       - 80:80
       - 443:443
