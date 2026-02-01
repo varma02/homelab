@@ -1,0 +1,25 @@
+include:
+  - ../traefik/networks.compose.yaml
+
+services:
+  couchdb:
+    container_name: couchdb
+    image: couchdb:3.5
+    restart: unless-stopped
+    environment:
+      COUCHDB_USER: ${COUCHDB_USER:?COUCHDB_USER variable not set}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD:?COUCHDB_PASSWORD variable not set}
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+    networks:
+      - traefik-couchdb
+    labels:
+      traefik.enable: true
+      traefik.http.routers.couchdb.rule: Host(`cdb.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
+      traefik.http.services.couchdb.loadbalancer.server.port: 5984
+      traefik.http.routers.couchdb.entrypoints: websecure
+
+volumes:
+  couchdb_data:
+    name: couchdb_data
+    driver: local
