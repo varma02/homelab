@@ -4,7 +4,7 @@ include:
 services:
   server:
     container_name: forgejo
-    image: codeberg.org/forgejo/forgejo:13
+    image: codeberg.org/forgejo/forgejo:14.0
     restart: unless-stopped
     environment:
       FORGEJO____APP_NAME: Forgejo
