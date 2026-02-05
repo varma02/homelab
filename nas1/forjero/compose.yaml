@@ -1,0 +1,30 @@
+include:
+  - ../traefik/networks.compose.yaml
+
+services:
+  server:
+    container_name: forgejo
+    image: codeberg.org/forgejo/forgejo:13
+    restart: unless-stopped
+    environment:
+      FORGEJO____APP_NAME: Forgejo
+      FORGEJO____APP_SLOGAN: Beyond coding. We forge.
+      FORGEJO__service__DISABLE_REGISTRATION: true
+    volumes:
+      - forgejo_data:/data
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - traefik-forgejo
+    labels:
+      traefik.enable: true
+      traefik.http.routers.forgejo.rule: Host(`forgejo.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
+      traefik.http.services.forgejo.loadbalancer.server.port: 3000
+      traefik.http.routers.forgejo.entrypoints: websecure
+    # ports:
+    #   - "3000:3000"
+    #   - "222:22"
+
+volumes:
+  forgejo_data:
+    name: forgejo_data
+    driver: local

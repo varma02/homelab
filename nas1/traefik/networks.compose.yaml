@@ -14,3 +14,6 @@ networks:
   traefik-couchdb:
     name: traefik-couchdb
     internal: true
+  traefik-forgejo:
+    name: traefik-forgejo
+    internal: true
