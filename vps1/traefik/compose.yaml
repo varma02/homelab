@@ -10,6 +10,7 @@ services:
       CF_DNS_API_TOKEN: ${CLOUDFLARE_DNS_API_TOKEN:?CLOUDFLARE_DNS_API_TOKEN variable not set}
     networks:
       - internet
+      - traefik-glance
     ports:
       - 80:80
       - 443:443

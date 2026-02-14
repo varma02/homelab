@@ -1,0 +1,5 @@
+networks:
+  traefik-glance:
+    name: traefik-glance
+    driver: local
+    internal: true
