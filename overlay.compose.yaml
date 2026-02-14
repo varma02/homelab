@@ -1,6 +1,0 @@
-networks:
-  arcane-overlay:
-    name: arcane-overlay
-    external: true
-    # driver: overlay
-    # internal: true

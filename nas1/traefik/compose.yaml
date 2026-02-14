@@ -13,7 +13,6 @@ services:
       - traefik-jellyfin
       - traefik-pihole
       - traefik-qbittorrent
-      - traefik-arcane-agent
       - traefik-couchdb
       - traefik-forgejo
     ports:
