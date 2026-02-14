@@ -1,5 +1,5 @@
 networks:
   traefik-glance:
     name: traefik-glance
-    driver: local
+    driver: bridge
     internal: true

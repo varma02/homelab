@@ -19,4 +19,4 @@ services:
 
 networks:
   internet:
-    driver: local
+    driver: bridge
