@@ -1,4 +1,5 @@
 networks:
   arcane-overlay:
+    name: arcane-overlay
     driver: overlay
     internal: true
