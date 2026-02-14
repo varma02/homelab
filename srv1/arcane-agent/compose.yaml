@@ -4,7 +4,7 @@ include:
 services:
   arcane-agent:
     container_name: arcane-agent
-    hostname: arcane-agent-nas1
+    hostname: arcane-agent-srv1
     image: ghcr.io/getarcaneapp/arcane-headless:latest
     restart: unless-stopped
     environment:

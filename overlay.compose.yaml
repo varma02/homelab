@@ -1,0 +1,4 @@
+networks:
+  arcane-overlay:
+    driver: overlay
+    internal: true
