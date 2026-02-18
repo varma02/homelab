@@ -3,3 +3,7 @@ networks:
     name: traefik-glance
     driver: bridge
     internal: true
+  traefik-authentik:
+    name: traefik-authentik
+    driver: bridge
+    internal: true

@@ -11,6 +11,7 @@ services:
     networks:
       - internet
       - traefik-glance
+      - traefik-authentik
     ports:
       - 80:80
       - 443:443

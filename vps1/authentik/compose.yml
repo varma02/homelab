@@ -1,0 +1,78 @@
+include:
+  - ../traefik/networks.compose.yaml
+
+services:
+  postgresql:
+    image: docker.io/library/postgres:16-alpine
+    healthcheck:
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      test:
+        - CMD-SHELL
+        - pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
+      timeout: 5s
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${PG_DB:-authentik}
+      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_USER: ${PG_USER:-authentik}
+    networks:
+      - internal
+    volumes:
+      - authentik_database:/var/lib/postgresql/data
+  server:
+    image: ghcr.io/goauthentik/server:2025.12.4
+    command: server
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
+      AUTHENTIK_ERROR_REPORTING__ENABLED: true
+    networks:
+      - internal
+      - traefik-authentik
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik-authentik
+      traefik.http.routers.authentik.rule: Host(`authentik.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
+      traefik.http.services.authentik.loadbalancer.server.port: 9000
+      traefik.http.routers.authentik.entrypoints: websecure
+    restart: unless-stopped
+    volumes:
+      - authentik_data:/data
+  worker:
+    image: ghcr.io/goauthentik/server:2025.12.4
+    command: worker
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
+      AUTHENTIK_ERROR_REPORTING__ENABLED: true
+    networks:
+      - internal
+    restart: unless-stopped
+    volumes:
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+      - authentik_data:/data
+
+volumes:
+  authentik_data:
+    driver: local
+  authentik_database:
+    driver: local
+
+networks:
+  internal:
+    driver: bridge
+    internal: true
