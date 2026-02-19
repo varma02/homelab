@@ -10,8 +10,8 @@ services:
       CF_DNS_API_TOKEN: ${CLOUDFLARE_DNS_API_TOKEN:?CLOUDFLARE_DNS_API_TOKEN variable not set}
     networks:
       - internet
-      - traefik-glance
       - traefik-authentik
+      - traefik-glance
     ports:
       - 80:80
       - 443:443
@@ -25,6 +25,7 @@ services:
       traefik.http.routers.traefik.rule: Host(`traefik.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
       traefik.http.routers.traefik.entrypoints: websecure
       traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.traefik.middlewares: authentik@file
       traefik.http.routers.traefik.tls.certresolver: cloudflare
 
 networks:
