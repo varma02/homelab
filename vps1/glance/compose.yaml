@@ -16,6 +16,7 @@ services:
       traefik.http.routers.glance.rule: Host(`glance.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
       traefik.http.services.glance.loadbalancer.server.port: 8080
       traefik.http.routers.glance.entrypoints: websecure
+      traefik.http.routers.glance.middlewares: authentik@file
 
 networks:
   internet:

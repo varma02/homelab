@@ -26,8 +26,8 @@ services:
       traefik.http.routers.traefik.rule: Host(`traefik.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
       traefik.http.routers.traefik.entrypoints: websecure
       traefik.http.routers.traefik.service: api@internal
-      traefik.http.routers.traefik.middlewares: authentik@file
       traefik.http.routers.traefik.tls.certresolver: cloudflare
+      traefik.http.routers.traefik.middlewares: authentik@file
 
 networks:
   internet:
