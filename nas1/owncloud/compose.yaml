@@ -93,5 +93,3 @@ networks:
   internal:
     driver: bridge
     internal: true
-  traefik-owncloud:
-    external: true
