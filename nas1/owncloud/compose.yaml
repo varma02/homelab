@@ -37,14 +37,13 @@ services:
       - /mnt/SigmaPool/owncloud/files:/mnt/data
 
     networks:
-      - traefik
+      - traefik-owncloud
       - internal
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network: traefik-owncloud"
       - "traefik.http.routers.owncloud.rule=Host(`cloud.${EXTERNAL_DOMAIN}`)"
       - "traefik.http.routers.owncloud.entrypoints=websecure"
-      - "traefik.http.routers.owncloud.tls=true"
-      - "traefik.http.routers.owncloud.tls.certresolver=le"
       - "traefik.http.services.owncloud.loadbalancer.server.port=8080"
 
   mariadb:
@@ -94,5 +93,5 @@ networks:
   internal:
     driver: bridge
     internal: true
-  traefik:
+  traefik-owncloud:
     external: true
