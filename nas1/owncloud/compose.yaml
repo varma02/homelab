@@ -40,11 +40,11 @@ services:
       - traefik-owncloud
       - internal
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network: traefik-owncloud"
-      - "traefik.http.routers.owncloud.rule=Host(`cloud.${EXTERNAL_DOMAIN}`)"
-      - "traefik.http.routers.owncloud.entrypoints=websecure"
-      - "traefik.http.services.owncloud.loadbalancer.server.port=8080"
+      traefik.enable: true
+      traefik.docker.network: traefik-owncloud
+      traefik.http.routers.owncloud.rule: Host(`cloud.${EXTERNAL_DOMAIN}`)
+      traefik.http.routers.owncloud.entrypoints: websecure
+      traefik.http.services.owncloud.loadbalancer.server.port: 8080
 
   mariadb:
     image: mariadb:10.11
