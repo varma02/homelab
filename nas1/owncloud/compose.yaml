@@ -3,7 +3,7 @@ include:
 
 services:
   server:
-    image: owncloud/server:10.15
+    image: owncloud/server:10.15.3
 
     security_opt:
       - no-new-privileges:true
