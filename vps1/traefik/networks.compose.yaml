@@ -7,3 +7,7 @@ networks:
     name: traefik-authentik
     driver: bridge
     internal: true
+  traefik-komodo:
+    name: traefik-komodo
+    driver: bridge
+    internal: true
