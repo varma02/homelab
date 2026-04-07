@@ -39,13 +39,13 @@ services:
     networks:
       - traefik-komodo
       - internal
+      - internet
     labels:
       traefik.enable: true
       traefik.docker.network: traefik-komodo
       traefik.http.routers.komodo.rule: Host(`komodo.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}`)
       traefik.http.services.komodo.loadbalancer.server.port: 9120
       traefik.http.routers.komodo.entrypoints: websecure
-
     env_file: ./.env
     environment:
       KOMODO_DATABASE_ADDRESS: mongo:27017
@@ -99,6 +99,8 @@ volumes:
   keys:
 
 networks:
+  internet:
+    driver: bridge
   internal:
     driver: bridge
     internal: true
