@@ -17,3 +17,6 @@ networks:
   traefik-owncloud:
     name: traefik-owncloud
     internal: true
+  traefik-beszel:
+    name: traefik-beszel
+    internal: true
