@@ -3,7 +3,7 @@ include:
 
 services:
   beszel:
-    image: henrygd/beszel:latest
+    image: ghcr.io/henrygd/beszel/beszel:0.18
     container_name: beszel
     restart: unless-stopped
     environment:
@@ -25,14 +25,21 @@ services:
       traefik.http.routers.beszel.entrypoints: websecure
 
   beszel-agent:
-    image: henrygd/beszel-agent:latest
+    image: ghcr.io/henrygd/beszel/beszel-agent-intel:0.18
     container_name: beszel-agent
     restart: unless-stopped
     network_mode: host
+    cap_add:
+      - CAP_PERFMON
+      - SYS_RAWIO
+    devices:
+      - /dev/dri/card0:/dev/dri/card0
     volumes:
       - beszel_agent_data:/var/lib/beszel-agent
       - beszel_socket:/beszel_socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /mnt/SigmaPool:/mnt/SigmaPool:ro
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro
     environment:
       LISTEN: /beszel_socket/beszel.sock
       # HUB_URL: https://beszel.${TAILNET_DOMAIN:?TAILNET_DOMAIN variable not set}
