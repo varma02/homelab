@@ -15,6 +15,7 @@ services:
       - traefik-qbittorrent
       - traefik-couchdb
       - traefik-forgejo
+      - traefik-beszel
     ports:
       - 80:80
       - 443:443
